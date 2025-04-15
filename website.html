@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tableau de Bord</title>
+  <style>
+    body {
+      background-image: url('thumb_automne-chemin-foret-dourdan-01.jpg');
+      background-repeat: no-repeat;
+      background-size: cover;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      height: 100vh;
+      background-color: #f4f4f4;
+      color: white;
+      text-align: center;
+    }
+
+    .sidebar {
+      width: 250px;
+      height: 100%;
+      background: #2c3e50;
+      color: white;
+      padding: 20px;
+      position: fixed;
+      left: 0;
+      top: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .main-content {
+      margin-left: 250px;
+      padding: 20px;
+      text-align: center;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.4);
+      padding: 30px;
+      border-radius: 10px;
+    }
+
+    h1 {
+      font-size: 36px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 18px;
+      margin-top: 10px;
+    }
+
+    .menu button {
+      display: block;
+      background: #34495e;
+      color: white;
+      padding: 15px 20px;
+      width: 100%;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      text-align: center;
+      font-size: 16px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .menu button:hover {
+      background: #1abc9c;
+      transform: translateY(-5px);
+      box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .logout-btn {
+      margin-top: auto;
+      background: red;
+      padding: 15px;
+      border: none;
+      color: white;
+      cursor: pointer;
+      width: 100%;
+      text-align: center;
+      border-radius: 8px;
+      transition: background 0.3s ease, transform 0.3s ease;
+      font-size: 16px;
+      font-weight: bold;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .logout-btn:hover {
+      background: darkred;
+      transform: translateY(-5px);
+      box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    select {
+      margin: 20px 0;
+      padding: 10px 12px;
+      font-size: 15px;
+      border-radius: 5px;
+      border: none;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h2>Tableau de Bord</h2>
+
+    <!-- Sélecteur de rôle -->
+    <select id="userRole" onchange="afficherBoutons()">
+      <option value="">-- Choisir un rôle --</option>
+      <option value="agent">Agent de récolte</option>
+      <option value="employe">Employé de surveillance</option>
+      <option value="analyste">Analyste</option>
+      <option value="public">Public</option>
+    </select>
+
+    <!-- Boutons dynamiques -->
+    <div class="menu" id="menuButtons"></div>
+
+    <!-- Déconnexion -->
+    <button class="logout-btn" onclick="logout()">Déconnexion</button>
+  </div>
+
+  <!-- Contenu principal -->
+  <div class="main-content">
+    <h1>Bienvenue</h1>
+    <p>dans la conservation des forêts de Mostaganem !</p>
+  </div>
+
+  <script>
+    function navigateTo(page) {
+      window.location.href = page;
+    }
+
+    function logout() {
+      window.location.href = "index.html";
+    }
+
+    const boutonsParRole = {
+      agent: [
+        { label: "Login employé", page: "login.html" },
+        { label: "Contact", page: "contact.html" },
+        { label: "Données dendrométriques", page: "dendometrique.html" },
+      ],
+      employe: [
+        { label: "Login employé", page: "login.html" },
+        { label: "Analyse", page: "analyse.html" },
+        { label: "Contact", page: "contact.html" },
+      ],
+      analyste: [
+        { label: "Analyse", page: "analyse.html" },
+        { label: "Entrer données dendrométriques", page: "dendometrique.html" },
+        { label: "Contact", page: "contact.html" },
+      ],
+      public: [
+        { label: "Voir les données enregistrées", page: "voir_donnees.html" },
+       
+        { label: "Contact", page: "contact.html" },
+      ]
+    };
+
+    function afficherBoutons() {
+      const role = document.getElementById('userRole').value;
+      const container = document.getElementById('menuButtons');
+      container.innerHTML = '';
+
+      if (boutonsParRole[role]) {
+        boutonsParRole[role].forEach(btn => {
+          const button = document.createElement('button');
+          button.textContent = btn.label;
+          button.onclick = () => navigateTo(btn.page);
+          container.appendChild(button);
+        });
+      }
+    }
+  </script>
+
+</body>
+</html>
