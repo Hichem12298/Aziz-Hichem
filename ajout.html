@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulaires de Récolte Dendrométrique</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f8f5;
+      padding: 20px;
+    }
+    h1 {
+      color: #1b5e20;
+    }
+    h2 {
+      color: #2e7d32;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 5px;
+      margin-top: 40px;
+    }
+    form {
+      background-color: #ffffff;
+      padding: 15px;
+      margin-bottom: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #388e3c;
+    }
+    .data-display {
+      background-color: #fff;
+      padding: 10px;
+      margin-top: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Formulaires de Récolte Dendrométrique</h1>
+
+  <!-- Forêt -->
+  <form id="form_foret">
+    <h2>Ajouter une Forêt</h2>
+    <label>Nom de la forêt :</label>
+    <input type="text" id="nom_foret" required>
+    <label>Localisation :</label>
+    <input type="text" id="localisation">
+    <button type="submit">Ajouter Forêt</button>
+  </form>
+
+  <!-- Affichage des données sauvegardées -->
+  <div class="data-display" id="data_foret_display">
+    <h2>Forêts ajoutées :</h2>
+    <ul id="forêts_list"></ul>
+  </div>
+
+  <script>
+    // Fonction pour enregistrer une forêt dans le Local Storage
+    function saveForêt(nom_foret, localisation) {
+      let forêts = JSON.parse(localStorage.getItem('forêts')) || [];
+      forêts.push({ nom_foret, localisation });
+      localStorage.setItem('forêts', JSON.stringify(forêts));
+      displayForêts();
+    }
+
+    // Fonction pour afficher les forêts stockées
+    function displayForêts() {
+      let forêts = JSON.parse(localStorage.getItem('forêts')) || [];
+      const listElement = document.getElementById('forêts_list');
+      listElement.innerHTML = ''; // Clear existing list
+
+      forêts.forEach(foret => {
+        let listItem = document.createElement('li');
+        listItem.textContent = `Nom: ${foret.nom_foret}, Localisation: ${foret.localisation}`;
+        listElement.appendChild(listItem);
+      });
+    }
+
+    // Event listener pour le formulaire de forêt
+    document.getElementById('form_foret').addEventListener('submit', function(event) {
+      event.preventDefault();
+      
+      const nom_foret = document.getElementById('nom_foret').value;
+      const localisation = document.getElementById('localisation').value;
+      
+      // Sauvegarder les données dans le Local Storage
+      saveForêt(nom_foret, localisation);
+      
+      // Réinitialiser le formulaire
+      document.getElementById('form_foret').reset();
+    });
+
+    // Afficher les données au chargement de la page
+    displayForêts();
+  </script>
+
+</body>
+</html>
