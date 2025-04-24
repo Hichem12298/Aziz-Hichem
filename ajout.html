@@ -3,122 +3,182 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Formulaires de Récolte Dendrométrique</title>
+  <title>Formulaires des 11 Entités</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f8f5;
-      padding: 20px;
-    }
-    h1 {
-      color: #1b5e20;
-    }
-    h2 {
-      color: #2e7d32;
-      border-bottom: 1px solid #ccc;
-      padding-bottom: 5px;
-      margin-top: 40px;
-    }
+    body { font-family: Arial, sans-serif; background-color: #f0f8f5; padding: 20px; }
+    h1 { color: #1b5e20; }
+    h2 { color: #2e7d32; border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-top: 40px; }
     form {
-      background-color: #ffffff;
-      padding: 15px;
-      margin-bottom: 30px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      background-color: #ffffff; padding: 15px; margin-bottom: 30px;
+      border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
-    label {
-      display: block;
-      margin-top: 10px;
-      font-weight: bold;
-    }
+    label { display: block; margin-top: 10px; font-weight: bold; }
     input, select, textarea {
-      width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
+      width: 100%; padding: 8px; margin-top: 5px;
+      border: 1px solid #ccc; border-radius: 4px;
     }
     button {
-      margin-top: 15px;
-      padding: 10px 20px;
-      background-color: #4caf50;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-weight: bold;
-      cursor: pointer;
+      margin-top: 15px; padding: 10px 20px;
+      background-color: #4caf50; color: white;
+      border: none; border-radius: 5px;
+      font-weight: bold; cursor: pointer;
     }
-    button:hover {
-      background-color: #388e3c;
-    }
-    .data-display {
-      background-color: #fff;
-      padding: 10px;
-      margin-top: 20px;
-      border-radius: 5px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    button:hover { background-color: #388e3c; }
+    .display-section {
+      margin-top: 40px;
+      padding: 15px;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
   </style>
 </head>
 <body>
 
-  <h1>Formulaires de Récolte Dendrométrique</h1>
+<h1>Formulaires - 11 Entités</h1>
 
+<form id="form">
   <!-- Forêt -->
-  <form id="form_foret">
-    <h2>Ajouter une Forêt</h2>
-    <label>Nom de la forêt :</label>
-    <input type="text" id="nom_foret" required>
-    <label>Localisation :</label>
-    <input type="text" id="localisation">
-    <button type="submit">Ajouter Forêt</button>
-  </form>
+  <h2>Forêt</h2>
+  <label>Nom :</label>
+  <input type="text" id="nom_foret">
+  <label>Localisation :</label>
+  <input type="text" id="localisation_foret">
 
-  <!-- Affichage des données sauvegardées -->
-  <div class="data-display" id="data_foret_display">
-    <h2>Forêts ajoutées :</h2>
-    <ul id="forêts_list"></ul>
-  </div>
+  <!-- Canton -->
+  <h2>Canton</h2>
+  <label>Nom du canton :</label>
+  <input type="text" id="nom_canton">
+  <label>Code canton :</label>
+  <input type="text" id="code_canton">
 
-  <script>
-    // Fonction pour enregistrer une forêt dans le Local Storage
-    function saveForêt(nom_foret, localisation) {
-      let forêts = JSON.parse(localStorage.getItem('forêts')) || [];
-      forêts.push({ nom_foret, localisation });
-      localStorage.setItem('forêts', JSON.stringify(forêts));
-      displayForêts();
+  <!-- Espèce -->
+  <h2>Espèce</h2>
+  <label>Nom scientifique :</label>
+  <input type="text" id="nom_scientifique">
+  <label>Nom commun :</label>
+  <input type="text" id="nom_commun">
+
+  <!-- Conservation -->
+  <h2>Conservation</h2>
+  <label>Nom de la conservation :</label>
+  <input type="text" id="nom_conservation">
+  <label>Adresse :</label>
+  <input type="text" id="adresse_conservation">
+
+  <!-- Circonscription -->
+  <h2>Circonscription</h2>
+  <label>Nom de la circonscription :</label>
+  <input type="text" id="nom_circonscription">
+  <label>Responsable :</label>
+  <input type="text" id="responsable_circonscription">
+
+  <!-- District -->
+  <h2>District</h2>
+  <label>Nom du district :</label>
+  <input type="text" id="nom_district">
+  <label>Chef de district :</label>
+  <input type="text" id="chef_district">
+
+  <!-- Agent de Récolte -->
+  <h2>Agent de Récolte</h2>
+  <label>Nom de l'agent :</label>
+  <input type="text" id="nom_agent">
+  <label>Matricule :</label>
+  <input type="text" id="matricule_agent">
+
+  <!-- Opération de Récolte -->
+  <h2>Opération de Récolte</h2>
+  <label>Date :</label>
+  <input type="date" id="date_op">
+  <label>Description :</label>
+  <textarea id="description_op"></textarea>
+
+  <!-- Donnée Dendrométrique -->
+  <h2>Donnée Dendrométrique</h2>
+  <label>Diamètre (cm) :</label>
+  <input type="number" id="diametre">
+  <label>Hauteur (m) :</label>
+  <input type="number" id="hauteur">
+
+  <!-- Analyste -->
+  <h2>Analyste</h2>
+  <label>Nom de l'analyste :</label>
+  <input type="text" id="nom_analyste">
+  <label>Spécialité :</label>
+  <input type="text" id="specialite_analyste">
+
+  <!-- Analyse -->
+  <h2>Analyse</h2>
+  <label>Date de l'analyse :</label>
+  <input type="date" id="date_analyse">
+  <label>Résultat :</label>
+  <textarea id="resultat_analyse"></textarea>
+
+  <button type="button" id="submit_button">Enregistrer</button>
+</form>
+
+<!-- Affichage des données -->
+<div class="display-section">
+  <h2>Données enregistrées</h2>
+  <div id="display_data"></div>
+</div>
+
+<script>
+  // Lors de la soumission du formulaire
+  document.getElementById('submit_button').addEventListener('click', function() {
+    let formData = {
+      nom_foret: document.getElementById('nom_foret').value,
+      localisation_foret: document.getElementById('localisation_foret').value,
+      nom_canton: document.getElementById('nom_canton').value,
+      code_canton: document.getElementById('code_canton').value,
+      nom_scientifique: document.getElementById('nom_scientifique').value,
+      nom_commun: document.getElementById('nom_commun').value,
+      nom_conservation: document.getElementById('nom_conservation').value,
+      adresse_conservation: document.getElementById('adresse_conservation').value,
+      nom_circonscription: document.getElementById('nom_circonscription').value,
+      responsable_circonscription: document.getElementById('responsable_circonscription').value,
+      nom_district: document.getElementById('nom_district').value,
+      chef_district: document.getElementById('chef_district').value,
+      nom_agent: document.getElementById('nom_agent').value,
+      matricule_agent: document.getElementById('matricule_agent').value,
+      date_op: document.getElementById('date_op').value,
+      description_op: document.getElementById('description_op').value,
+      diametre: document.getElementById('diametre').value,
+      hauteur: document.getElementById('hauteur').value,
+      nom_analyste: document.getElementById('nom_analyste').value,
+      specialite_analyste: document.getElementById('specialite_analyste').value,
+      date_analyse: document.getElementById('date_analyse').value,
+      resultat_analyse: document.getElementById('resultat_analyse').value
+    };
+
+    // Enregistrer les données dans le localStorage
+    localStorage.setItem('formData', JSON.stringify(formData));
+
+    // Afficher les données enregistrées
+    displayData();
+
+    // Vous pouvez également envoyer les données à un serveur via PHP (non montré ici)
+  });
+
+  // Fonction pour afficher les données enregistrées depuis localStorage
+  function displayData() {
+    const savedData = JSON.parse(localStorage.getItem('formData'));
+    if (savedData) {
+      let displayContent = "<ul>";
+      for (const key in savedData) {
+        displayContent += `<li><strong>${key.replace(/_/g, ' ')}:</strong> ${savedData[key]}</li>`;
+      }
+      displayContent += "</ul>";
+      document.getElementById('display_data').innerHTML = displayContent;
     }
+  }
 
-    // Fonction pour afficher les forêts stockées
-    function displayForêts() {
-      let forêts = JSON.parse(localStorage.getItem('forêts')) || [];
-      const listElement = document.getElementById('forêts_list');
-      listElement.innerHTML = ''; // Clear existing list
-
-      forêts.forEach(foret => {
-        let listItem = document.createElement('li');
-        listItem.textContent = `Nom: ${foret.nom_foret}, Localisation: ${foret.localisation}`;
-        listElement.appendChild(listItem);
-      });
-    }
-
-    // Event listener pour le formulaire de forêt
-    document.getElementById('form_foret').addEventListener('submit', function(event) {
-      event.preventDefault();
-      
-      const nom_foret = document.getElementById('nom_foret').value;
-      const localisation = document.getElementById('localisation').value;
-      
-      // Sauvegarder les données dans le Local Storage
-      saveForêt(nom_foret, localisation);
-      
-      // Réinitialiser le formulaire
-      document.getElementById('form_foret').reset();
-    });
-
-    // Afficher les données au chargement de la page
-    displayForêts();
-  </script>
+  // Afficher les données dès le chargement de la page si elles existent
+  window.onload = function() {
+    displayData();
+  };
+</script>
 
 </body>
 </html>
