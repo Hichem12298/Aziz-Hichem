@@ -101,6 +101,7 @@
   let utilisateurs = JSON.parse(localStorage.getItem('utilisateurs')) || [
     { email: "administrateur@gmail.com", password: "123", role: "admin", accepte: true }
   ];
+
   function connexion() {
     const email = document.getElementById('loginEmail').value;
     const password = document.getElementById('loginPassword').value;
@@ -112,6 +113,7 @@
     document.getElementById('sidebar').classList.remove('hidden');
     chargerInterfaceUtilisateur(user);
   }
+
   function chargerInterfaceUtilisateur(user) {
     const menu = document.getElementById('menuButtons');
     menu.innerHTML = '';
@@ -141,9 +143,19 @@
       `;
     }
   }
+
   function logout() {
     localStorage.removeItem('currentUser');
     location.reload();
+  }
+
+  window.onload = () => {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (currentUser) {
+      document.getElementById('loginContainer').classList.add('hidden');
+      document.getElementById('sidebar').classList.remove('hidden');
+      chargerInterfaceUtilisateur(currentUser);
+    }
   }
 </script>
 </body>
