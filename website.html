@@ -75,85 +75,76 @@
       max-width: 800px;
       margin: auto;
     }
-    .hidden {
-      display: none;
-    }
   </style>
 </head>
 <body>
-  <div class="login-container" id="loginContainer">
-    <div class="login-box">
-      <h2>Connexion</h2>
-      <input type="email" id="loginEmail" placeholder="Email">
-      <input type="password" id="loginPassword" placeholder="Mot de passe">
-      <button onclick="connexion()">Se connecter</button>
-    </div>
+<div class="login-container" id="loginContainer">
+  <div class="login-box">
+    <h2>Connexion</h2>
+    <input type="email" id="loginEmail" placeholder="Email">
+    <input type="password" id="loginPassword" placeholder="Mot de passe">
+    <button onclick="connexion()">Se connecter</button>
   </div>
-
-  <div class="sidebar hidden" id="sidebar">
-    <h2>Tableau de Bord</h2>
-    <div class="menu" id="menuButtons"></div>
-    <button class="logout-btn" onclick="logout()">Déconnexion</button>
+</div>
+<div class="sidebar hidden" id="sidebar">
+  <h2>Tableau de Bord</h2>
+  <div class="menu" id="menuButtons"></div>
+  <button class="logout-btn" onclick="logout()">Déconnexion</button>
+</div>
+<div class="main-content">
+  <div class="card" id="welcome">
+    <h2>Bienvenue dans la Conservation des forêts de la wilaya de Mostaganem</h2>
+    <p>Veuillez utiliser les boutons à gauche selon votre rôle pour accéder aux fonctionnalités.</p>
   </div>
-
-  <div class="main-content">
-    <div class="card" id="welcome">
-      <h2>Bienvenue dans la Conservation des forêts de la wilaya de Mostaganem</h2>
-      <p>Veuillez utiliser les boutons à gauche selon votre rôle pour accéder aux fonctionnalités.</p>
-    </div>
-  </div>
-
-  <script>
-    let utilisateurs = JSON.parse(localStorage.getItem('utilisateurs')) || [
-      { email: "administrateur@gmail.com", password: "123", role: "admin", accepte: true }
-    ];
-
-    function connexion() {
-      const email = document.getElementById('loginEmail').value;
-      const password = document.getElementById('loginPassword').value;
-      const user = utilisateurs.find(u => u.email === email && u.password === password);
-      if (!user) return alert("Utilisateur non trouvé ou mot de passe incorrect.");
-      if (!user.accepte) return alert("Compte en attente de validation par l'administrateur.");
-      localStorage.setItem('currentUser', JSON.stringify(user));
-      document.getElementById('loginContainer').classList.add('hidden');
-      document.getElementById('sidebar').classList.remove('hidden');
-      chargerInterfaceUtilisateur(user);
+</div>
+<script>
+  let utilisateurs = JSON.parse(localStorage.getItem('utilisateurs')) || [
+    { email: "administrateur@gmail.com", password: "123", role: "admin", accepte: true }
+  ];
+  function connexion() {
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    const user = utilisateurs.find(u => u.email === email && u.password === password);
+    if (!user) return alert("Utilisateur non trouvé ou mot de passe incorrect.");
+    if (!user.accepte) return alert("Compte en attente de validation par l'administrateur.");
+    localStorage.setItem('currentUser', JSON.stringify(user));
+    document.getElementById('loginContainer').classList.add('hidden');
+    document.getElementById('sidebar').classList.remove('hidden');
+    chargerInterfaceUtilisateur(user);
+  }
+  function chargerInterfaceUtilisateur(user) {
+    const menu = document.getElementById('menuButtons');
+    menu.innerHTML = '';
+    if (user.role === 'admin') {
+      menu.innerHTML += `
+        <button onclick="location.href='admin.html'">Gérer les utilisateurs</button>
+        <button onclick="location.href='ajouter.html'">Ajouter un utilisateur</button>
+      `;
+    } else if (user.role === 'agent') {
+      menu.innerHTML += `
+        <button onclick="location.href='dendometrique.html'">Entrer les Données</button>
+        <button onclick="location.href='contact.html'">Contact</button>
+      `;
+    } else if (user.role === 'analyste') {
+      menu.innerHTML += `
+        <button onclick="location.href='analyse.html'">Analyser les Données</button>
+        <button onclick="location.href='contact.html'">Contact</button>
+      `;
+    } else if (user.role === 'employe') {
+      menu.innerHTML += `
+        <button onclick="location.href='surveillance.html'">Surveiller les Données</button>
+        <button onclick="location.href='contact.html'">Contact</button>
+      `;
+    } else if (user.role === 'public') {
+      menu.innerHTML += `
+        <button onclick="location.href='contact.html'">Contact</button>
+      `;
     }
-
-    function chargerInterfaceUtilisateur(user) {
-      const menu = document.getElementById('menuButtons');
-      menu.innerHTML = '';
-      if (user.role === 'admin') {
-        menu.innerHTML += `
-          <button onclick="location.href='admin.html'">Gérer les utilisateurs</button>
-          <button onclick="location.href='ajouter.html'">Ajouter un utilisateur</button>
-        `;
-      } else if (user.role === 'agent') {
-        menu.innerHTML += `
-          <button onclick="location.href='dendometrique.html'">Entrer les Données</button>
-          <button onclick="location.href='contact.html'">Contact</button>
-        `;
-      } else if (user.role === 'analyste') {
-        menu.innerHTML += `
-          <button onclick="location.href='analyse.html'">Analyser les Données</button>
-          <button onclick="location.href='contact.html'">Contact</button>
-        `;
-      } else if (user.role === 'employe') {
-        menu.innerHTML += `
-          <button onclick="location.href='surveillance.html'">Surveiller les Données</button>
-          <button onclick="location.href='contact.html'">Contact</button>
-        `;
-      } else if (user.role === 'public') {
-        menu.innerHTML += `
-          <button onclick="location.href='contact.html'">Contact</button>
-        `;
-      }
-    }
-
-    function logout() {
-      localStorage.removeItem('currentUser');
-      location.reload();
-    }
-  </script>
+  }
+  function logout() {
+    localStorage.removeItem('currentUser');
+    location.reload();
+  }
+</script>
 </body>
 </html>
