@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gestion des Utilisateurs</title>
+  <style>
+    body {
+      background-image: url('thumb_automne-chemin-foret-dourdan-01.jpg');
+      background-repeat: no-repeat;
+      background-size: cover;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: white;
+    }
+    .sidebar {
+      width: 250px;
+      height: 100%;
+      background: #2c3e50;
+      padding: 20px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .sidebar button {
+      width: 100%;
+      margin-bottom: 15px;
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+      font-size: 16px;
+      background: #34495e;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .sidebar button:hover {
+      background: #1abc9c;
+    }
+    .logout-btn {
+      margin-top: auto;
+      background: red;
+      color: white;
+    }
+    .main-content {
+      margin-left: 260px;
+      padding: 40px;
+    }
+    .user-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    .user-table th, .user-table td {
+      padding: 10px;
+      text-align: left;
+      border: 1px solid #ddd;
+    }
+    .user-table th {
+      background-color: #34495e;
+    }
+    .user-table td {
+      background-color: rgba(0, 0, 0, 0.6);
+    }
+    .user-table button {
+      padding: 5px 10px;
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .user-table button:hover {
+      background-color: #c0392b;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <h2>Tableau de Bord</h2>
+    <button onclick="location.href='website.html'">Retour à l'accueil</button>
+    <button class="logout-btn" onclick="logout()">Déconnexion</button>
+  </div>
+
+  <div class="main-content">
+    <h2>Gestion des Utilisateurs</h2>
+    <table class="user-table">
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>Rôle</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="userList">
+        <!-- La liste des utilisateurs sera générée ici -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    // Récupérer les utilisateurs du localStorage
+    let utilisateurs = JSON.parse(localStorage.getItem('utilisateurs')) || [
+      { email: "administrateur@gmail.com", password: "123", role: "admin", accepte: true }
+    ];
+
+    // Fonction pour afficher la liste des utilisateurs
+    function afficherUtilisateurs() {
+      const userList = document.getElementById('userList');
+      userList.innerHTML = '';
+      utilisateurs.forEach((user, index) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${user.email}</td>
+          <td>${user.role}</td>
+          <td>${user.accepte ? 'Accepté' : 'En attente'}</td>
+          <td>
+            <button onclick="supprimerUtilisateur(${index})">Supprimer</button>
+            ${user.accepte ? '' : `<button onclick="accepterUtilisateur(${index})">Accepter</button>`}
+          </td>
+        `;
+        userList.appendChild(tr);
+      });
+    }
+
+    // Fonction pour supprimer un utilisateur
+    function supprimerUtilisateur(index) {
+      if (confirm("Êtes-vous sûr de vouloir supprimer cet utilisateur ?")) {
+        utilisateurs.splice(index, 1);
+        localStorage.setItem('utilisateurs', JSON.stringify(utilisateurs));
+        afficherUtilisateurs(); // Mettre à jour la liste
+      }
+    }
+
+    // Fonction pour accepter un utilisateur
+    function accepterUtilisateur(index) {
+      utilisateurs[index].accepte = true;
+      localStorage.setItem('utilisateurs', JSON.stringify(utilisateurs));
+      afficherUtilisateurs(); // Mettre à jour la liste
+    }
+
+    // Fonction de déconnexion
+    function logout() {
+      localStorage.removeItem('currentUser');
+      location.href = 'index.html'; // Redirige vers la page d'accueil
+    }
+
+    // Appeler la fonction pour afficher les utilisateurs au chargement de la page
+    afficherUtilisateurs();
+  </script>
+
+</body>
+</html>

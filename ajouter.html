@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ajouter un Utilisateur</title>
+  <style>
+    body {
+      background-image: url('thumb_automne-chemin-foret-dourdan-01.jpg');
+      background-repeat: no-repeat;
+      background-size: cover;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: white;
+    }
+    .sidebar {
+      width: 250px;
+      height: 100%;
+      background: #2c3e50;
+      padding: 20px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .sidebar button {
+      width: 100%;
+      margin-bottom: 15px;
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+      font-size: 16px;
+      background: #34495e;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .sidebar button:hover {
+      background: #1abc9c;
+    }
+    .logout-btn {
+      margin-top: auto;
+      background: red;
+      color: white;
+    }
+    .main-content {
+      margin-left: 260px;
+      padding: 40px;
+    }
+    .form-container {
+      background: rgba(0, 0, 0, 0.6);
+      padding: 30px;
+      border-radius: 10px;
+      max-width: 500px;
+      margin: auto;
+    }
+    .form-container input, .form-container select, .form-container button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: none;
+      font-size: 16px;
+    }
+    .form-container button {
+      background: #1abc9c;
+      color: white;
+      cursor: pointer;
+    }
+    .form-container button:hover {
+      background: #16a085;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <h2>Tableau de Bord</h2>
+    <button onclick="location.href='website.html'">Retour à l'accueil</button>
+    <button onclick="location.href='admin.html'">Retour à la gestion des utilisateurs</button>
+    <button class="logout-btn" onclick="logout()">Déconnexion</button>
+  </div>
+
+  <div class="main-content">
+    <h2>Ajouter un Nouvel Utilisateur</h2>
+    <div class="form-container">
+      <input type="email" id="email" placeholder="Email" required>
+      <input type="password" id="password" placeholder="Mot de passe" required>
+      <select id="role" required>
+        <option value="" disabled selected>Choisir un rôle</option>
+        <option value="agent">Agent de récolte</option>
+        <option value="analyste">Analyste</option>
+        <option value="employe">Employé de surveillance</option>
+        <option value="admin">Administrateur</option>
+        <option value="public">Public</option>
+      </select>
+      <button onclick="ajouterUtilisateur()">Ajouter l'Utilisateur</button>
+    </div>
+  </div>
+
+  <script>
+    // Récupérer les utilisateurs du localStorage
+    let utilisateurs = JSON.parse(localStorage.getItem('utilisateurs')) || [
+      { email: "administrateur@gmail.com", password: "123", role: "admin", accepte: true }
+    ];
+
+    // Fonction pour ajouter un nouvel utilisateur
+    function ajouterUtilisateur() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const role = document.getElementById('role').value;
+
+      if (!email || !password || !role) {
+        alert("Veuillez remplir tous les champs.");
+        return;
+      }
+
+      // Vérifier si l'email existe déjà
+      const utilisateurExiste = utilisateurs.some(user => user.email === email);
+      if (utilisateurExiste) {
+        alert("Un utilisateur avec cet email existe déjà.");
+        return;
+      }
+
+      // Ajouter l'utilisateur
+      const nouveauUtilisateur = {
+        email: email,
+        password: password,
+        role: role,
+        accepte: role === 'admin' ? true : false // Si c'est un admin, il est accepté immédiatement
+      };
+      utilisateurs.push(nouveauUtilisateur);
+      localStorage.setItem('utilisateurs', JSON.stringify(utilisateurs));
+      alert("Utilisateur ajouté avec succès!");
+      location.href = 'admin.html'; // Rediriger vers la gestion des utilisateurs après ajout
+    }
+
+    // Fonction de déconnexion
+    function logout() {
+      localStorage.removeItem('currentUser');
+      location.href = 'index.html'; // Redirige vers la page d'accueil
+    }
+  </script>
+
+</body>
+</html>

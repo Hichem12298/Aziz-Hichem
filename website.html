@@ -14,7 +14,7 @@
       font-family: Arial, sans-serif;
       color: white;
     }
-    .login-container {
+    .login-container, .contact-container {
       position: fixed;
       top: 0;
       left: 0;
@@ -32,16 +32,6 @@
       width: 300px;
       text-align: center;
     }
-    .login-box h2 {
-      margin-bottom: 20px;
-    }
-    .login-box input, .login-box button {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 5px;
-      border: none;
-    }
     .sidebar {
       width: 250px;
       height: 100%;
@@ -54,21 +44,19 @@
       flex-direction: column;
       align-items: center;
     }
-    .sidebar select, .sidebar button {
+    .sidebar button {
       width: 100%;
       margin-bottom: 15px;
       padding: 10px;
       border-radius: 5px;
       border: none;
       font-size: 16px;
-    }
-    .menu button {
       background: #34495e;
       color: white;
       cursor: pointer;
       transition: 0.3s;
     }
-    .menu button:hover {
+    .sidebar button:hover {
       background: #1abc9c;
     }
     .logout-btn {
@@ -80,9 +68,6 @@
       margin-left: 260px;
       padding: 40px;
     }
-    .hidden {
-      display: none;
-    }
     .card {
       background: rgba(0, 0, 0, 0.6);
       padding: 30px;
@@ -90,199 +75,85 @@
       max-width: 800px;
       margin: auto;
     }
-    .card h2, .card p {
-      text-align: center;
-    }
-    input, button, select {
-      padding: 10px;
-      margin-top: 10px;
-      width: 100%;
-      border-radius: 5px;
-    }
-    table {
-      width: 100%;
-      margin-top: 20px;
-      border-collapse: collapse;
-    }
-    table, th, td {
-      border: 1px solid white;
-    }
-    th, td {
-      padding: 10px;
-      text-align: center;
-    }
-    .admin-panel {
-      margin-top: 30px;
-    }
-    .accepted-user {
-      background-color: #27ae60;
+    .hidden {
+      display: none;
     }
   </style>
 </head>
 <body>
-
-<div class="login-container" id="loginContainer">
-  <div class="login-box">
-    <h2>Connexion</h2>
-    <input type="email" id="loginEmail" placeholder="Email">
-    <input type="password" id="loginPassword" placeholder="Mot de passe">
-    <button onclick="connexion()">Se connecter</button>
-  </div>
-</div>
-
-<div class="sidebar hidden" id="sidebar">
-  <h2>Tableau de Bord</h2>
-  <select id="userRole" onchange="handleRole()">
-    <option value="">-- Choisir un rôle --</option>
-    <option value="agent">Agent de récolte</option>
-    <option value="employe">Employé de surveillance</option>
-    <option value="analyste">Analyste</option>
-    <option value="public">Public</option>
-    <option value="admin">Administrateur</option>
-  </select>
-  <div class="menu" id="menuButtons">
-    <button onclick="afficherSection('donneesForm')">Entrer Données</button>
-    <button onclick="afficherSection('adminPanel')">Gérer les utilisateurs</button>
-    <button onclick="afficherSection('addUserPanel')">Ajouter un utilisateur</button>
-  </div>
-  <button class="logout-btn" onclick="logout()">Déconnexion</button>
-</div>
-
-<div class="main-content">
-  <div class="card" id="welcome">
-    <h2>Bienvenue dans la Conservation des forêts de la wilaya de Mostaganem</h2>
-    <p>Veuillez choisir un rôle à gauche pour accéder aux fonctionnalités.</p>
+  <div class="login-container" id="loginContainer">
+    <div class="login-box">
+      <h2>Connexion</h2>
+      <input type="email" id="loginEmail" placeholder="Email">
+      <input type="password" id="loginPassword" placeholder="Mot de passe">
+      <button onclick="connexion()">Se connecter</button>
+    </div>
   </div>
 
-  <div class="card hidden" id="donneesForm">
-    <h2>Entrer les Données Dendrométriques</h2>
-    <input type="text" id="donneeNom" placeholder="Nom de l'arbre">
-    <input type="number" id="donneeHauteur" placeholder="Hauteur (m)">
-    <input type="number" id="donneeDiametre" placeholder="Diamètre (cm)">
-    <button onclick="ajouterDonnee()">Ajouter</button>
-    <button onclick="supprimerSelection()">Supprimer la sélection</button>
-    <table>
-      <thead>
-        <tr><th>Sélection</th><th>Nom</th><th>Hauteur</th><th>Diamètre</th><th>Action</th></tr>
-      </thead>
-      <tbody id="tableDonnees"></tbody>
-    </table>
+  <div class="sidebar hidden" id="sidebar">
+    <h2>Tableau de Bord</h2>
+    <div class="menu" id="menuButtons"></div>
+    <button class="logout-btn" onclick="logout()">Déconnexion</button>
   </div>
 
-  <div class="card hidden" id="adminPanel">
-    <h2>Liste des utilisateurs</h2>
-    <table>
-      <thead>
-        <tr><th>Email</th><th>Rôle</th><th>Actions</th></tr>
-      </thead>
-      <tbody id="listeUtilisateurs"></tbody>
-    </table>
+  <div class="main-content">
+    <div class="card" id="welcome">
+      <h2>Bienvenue dans la Conservation des forêts de la wilaya de Mostaganem</h2>
+      <p>Veuillez utiliser les boutons à gauche selon votre rôle pour accéder aux fonctionnalités.</p>
+    </div>
   </div>
 
-  <div class="card hidden" id="addUserPanel">
-    <h2>Ajouter un utilisateur</h2>
-    <input type="email" id="newUserEmail" placeholder="Email">
-    <input type="password" id="newUserPassword" placeholder="Mot de passe">
-    <select id="newUserRole">
-      <option value="agent">Agent de récolte</option>
-      <option value="employe">Employé de surveillance</option>
-      <option value="analyste">Analyste</option>
-      <option value="public">Public</option>
-    </select>
-    <button onclick="ajouterUtilisateur()">Ajouter Utilisateur</button>
-  </div>
-</div>
+  <script>
+    let utilisateurs = JSON.parse(localStorage.getItem('utilisateurs')) || [
+      { email: "administrateur@gmail.com", password: "123", role: "admin", accepte: true }
+    ];
 
-<script>
-  let donnees = JSON.parse(localStorage.getItem('donnees')) || [];
-  let utilisateurs = JSON.parse(localStorage.getItem('utilisateurs')) || [
-    { email: "administrateur@gmail.com", password: "123", role: "admin", accepte: true }
-  ];
-
-  function connexion() {
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
-    const user = utilisateurs.find(u => u.email === email && u.password === password);
-    if (!user) return alert("Utilisateur non trouvé ou mot de passe incorrect.");
-    if (!user.accepte) return alert("Compte en attente de validation par l'administrateur.");
-
-    document.getElementById('loginContainer').classList.add('hidden');
-    document.getElementById('sidebar').classList.remove('hidden');
-    document.getElementById('userRole').value = user.role;
-    handleRole();
-  }
-
-  function ajouterUtilisateur() {
-    const email = document.getElementById('newUserEmail').value;
-    const password = document.getElementById('newUserPassword').value;
-    const role = document.getElementById('newUserRole').value;
-    if (!email || !password) return alert("Veuillez entrer un email et un mot de passe.");
-
-    utilisateurs.push({ email, password, role, accepte: false });
-    localStorage.setItem('utilisateurs', JSON.stringify(utilisateurs));
-    document.getElementById('newUserEmail').value = '';
-    document.getElementById('newUserPassword').value = '';
-    alert("Utilisateur ajouté avec succès.");
-  }
-
-  function afficherUtilisateurs() {
-    const tbody = document.getElementById('listeUtilisateurs');
-    tbody.innerHTML = '';
-    utilisateurs.forEach((user, i) => {
-      const acceptedClass = user.accepte ? 'accepted-user' : '';
-      tbody.innerHTML += `<tr class="${acceptedClass}">
-        <td>${user.email}</td>
-        <td>${user.role}</td>
-        <td>
-          ${user.role !== 'admin' ? `
-          <button onclick="accepterUtilisateur(${i})">Accepter</button>
-          <button onclick="supprimerUtilisateur(${i})">Supprimer</button>` : 'Admin'}
-        </td>
-      </tr>`;
-    });
-  }
-
-  function accepterUtilisateur(index) {
-    utilisateurs[index].accepte = true;
-    localStorage.setItem('utilisateurs', JSON.stringify(utilisateurs));
-    afficherUtilisateurs();
-  }
-
-  function supprimerUtilisateur(index) {
-    if (utilisateurs[index].role === 'admin') return alert("Impossible de supprimer l'administrateur.");
-    utilisateurs.splice(index, 1);
-    localStorage.setItem('utilisateurs', JSON.stringify(utilisateurs));
-    afficherUtilisateurs();
-  }
-
-  function handleRole() {
-    document.getElementById('welcome').classList.add('hidden');
-    const role = document.getElementById('userRole').value;
-    if (role === 'admin') {
-      afficherSection('adminPanel');
-      afficherUtilisateurs();
-    } else {
-      afficherSection('donneesForm');
+    function connexion() {
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      const user = utilisateurs.find(u => u.email === email && u.password === password);
+      if (!user) return alert("Utilisateur non trouvé ou mot de passe incorrect.");
+      if (!user.accepte) return alert("Compte en attente de validation par l'administrateur.");
+      localStorage.setItem('currentUser', JSON.stringify(user));
+      document.getElementById('loginContainer').classList.add('hidden');
+      document.getElementById('sidebar').classList.remove('hidden');
+      chargerInterfaceUtilisateur(user);
     }
-  }
 
-  function afficherSection(id) {
-    cacherToutesSections();
-    document.getElementById(id).classList.remove('hidden');
-  }
+    function chargerInterfaceUtilisateur(user) {
+      const menu = document.getElementById('menuButtons');
+      menu.innerHTML = '';
+      if (user.role === 'admin') {
+        menu.innerHTML += `
+          <button onclick="location.href='admin.html'">Gérer les utilisateurs</button>
+          <button onclick="location.href='ajouter.html'">Ajouter un utilisateur</button>
+        `;
+      } else if (user.role === 'agent') {
+        menu.innerHTML += `
+          <button onclick="location.href='dendometrique.html'">Entrer les Données</button>
+          <button onclick="location.href='contact.html'">Contact</button>
+        `;
+      } else if (user.role === 'analyste') {
+        menu.innerHTML += `
+          <button onclick="location.href='analyse.html'">Analyser les Données</button>
+          <button onclick="location.href='contact.html'">Contact</button>
+        `;
+      } else if (user.role === 'employe') {
+        menu.innerHTML += `
+          <button onclick="location.href='surveillance.html'">Surveiller les Données</button>
+          <button onclick="location.href='contact.html'">Contact</button>
+        `;
+      } else if (user.role === 'public') {
+        menu.innerHTML += `
+          <button onclick="location.href='contact.html'">Contact</button>
+        `;
+      }
+    }
 
-  function cacherToutesSections() {
-    document.querySelectorAll('.card').forEach(card => card.classList.add('hidden'));
-  }
-
-  function logout() {
-    location.reload();
-  }
-
-  window.onload = function() {
-    afficherUtilisateurs();
-  }
-</script>
-
+    function logout() {
+      localStorage.removeItem('currentUser');
+      location.reload();
+    }
+  </script>
 </body>
 </html>
