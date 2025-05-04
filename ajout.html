@@ -5,201 +5,158 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Gestion des 11 Entités</title>
   <style>
-    body { font-family: Arial, sans-serif; background-color: #f0f8f5; padding: 20px; }
-    h1 { color: #1b5e20; }
-    h2 { color: #2e7d32; border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-top: 40px; }
-    form {
-      background-color: #ffffff; padding: 15px; margin-bottom: 30px;
-      border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    body { font-family: Arial, sans-serif; background-color: #eef5f2; padding: 20px; }
+    h1, h2 { text-align: center; color: #2e7d32; }
+    form, .entite-section {
+      background: white; padding: 20px; border-radius: 10px;
+      max-width: 700px; margin: 20px auto; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
-    label { display: block; margin-top: 10px; font-weight: bold; }
-    input, select, textarea {
-      width: 100%; padding: 8px; margin-top: 5px;
-      border: 1px solid #ccc; border-radius: 4px;
-    }
+    label { display: block; margin-top: 10px; }
+    input, select { width: 100%; padding: 8px; margin-top: 5px; }
     button {
-      margin-top: 15px; padding: 10px 20px;
-      background-color: #4caf50; color: white;
-      border: none; border-radius: 5px;
-      font-weight: bold; cursor: pointer;
+      background-color: #4caf50; color: white; border: none;
+      padding: 10px 20px; margin-top: 15px; cursor: pointer;
+      border-radius: 5px;
     }
     button:hover { background-color: #388e3c; }
-    .display-section {
-      margin-top: 40px;
-      padding: 15px;
-      background-color: #f9f9f9;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    table {
+      width: 100%; border-collapse: collapse; margin-top: 20px;
     }
-    .entry {
-      margin-bottom: 20px;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
+    th, td {
+      padding: 10px; border: 1px solid #ccc;
+    }
+    th { background: #f1f1f1; }
+    .delete-btn {
+      background: #e53935; color: white; padding: 6px 12px;
+      border: none; border-radius: 5px; cursor: pointer;
     }
   </style>
 </head>
 <body>
 
-<h1>Formulaires - 11 Entités</h1>
+<h1>Gestion des 11 Entités</h1>
 
-<form id="form">
-  <!-- Forêt -->
-  <h2>Forêt</h2>
-  <label>Nom :</label>
-  <input type="text" id="nom_foret">
-  <label>Localisation :</label>
-  <input type="text" id="localisation_foret">
-  <label>Superficie (ha) :</label>
-  <input type="number" id="superficie_foret">
+<form id="formEntite">
+  <label for="type">Sélectionner une entité :</label>
+  <select id="type" required>
+    <option value="">-- Choisir --</option>
+    <option value="espece">Espèce</option>
+    <option value="foret">Forêt</option>
+    <option value="canton">Canton</option>
+    <option value="conservation">Conservation</option>
+    <option value="circonscription">Circonscription</option>
+    <option value="district">District</option>
+    <option value="agent">Agent de récolte</option>
+    <option value="analyste">Analyste</option>
+    <option value="analyse">Analyse</option>
+    <option value="operation">Opération de récolte</option>
+    <option value="donnee">Donnée dendrométrique</option>
+  </select>
 
-  <!-- Canton -->
-  <h2>Canton</h2>
-  <label>Nom du canton :</label>
-  <input type="text" id="nom_canton">
-  <label>Code canton :</label>
-  <input type="text" id="code_canton">
+  <div id="dynamic-fields"></div>
 
-  <!-- Espèce -->
-  <h2>Espèce</h2>
-  <label>ID :</label>
-  <input type="text" id="id_espece">
-  <label>Nom scientifique :</label>
-  <input type="text" id="nom_scientifique">
-  <label>Nom commun :</label>
-  <input type="text" id="nom_commun">
-
-  <!-- Conservation -->
-  <h2>Conservation</h2>
-  <label>Nom :</label>
-  <input type="text" id="nom_conservation">
-  <label>ID :</label>
-  <input type="text" id="id_conservation">
-  <label>Adresse :</label>
-  <input type="text" id="adresse_conservation">
-  <label>Conservateur :</label>
-  <input type="text" id="conservateur">
-
-  <!-- Circonscription -->
-  <h2>Circonscription</h2>
-  <label>Nom :</label>
-  <input type="text" id="nom_circonscription">
-  <label>ID :</label>
-  <input type="text" id="id_circonscription">
-  <label>Adresse :</label>
-  <input type="text" id="adresse_circonscription">
-  <label>Responsable :</label>
-  <input type="text" id="responsable_circonscription">
-
-  <!-- District -->
-  <h2>District</h2>
-  <label>Nom :</label>
-  <input type="text" id="nom_district">
-  <label>Chef :</label>
-  <input type="text" id="chef_district">
-
-  <!-- Agent de Récolte -->
-  <h2>Agent de Récolte</h2>
-  <label>Nom de l'agent :</label>
-  <input type="text" id="nom_agent">
-  <label>Matricule :</label>
-  <input type="text" id="matricule_agent">
-
-  <!-- Opération de Récolte -->
-  <h2>Opération de Récolte</h2>
-  <label>Date :</label>
-  <input type="date" id="date_op">
-  <label>Description :</label>
-  <textarea id="description_op"></textarea>
-
-  <!-- Donnée Dendrométrique -->
-  <h2>Donnée Dendrométrique</h2>
-  <label>Diamètre (cm) :</label>
-  <input type="number" id="diametre">
-  <label>Hauteur (m) :</label>
-  <input type="number" id="hauteur">
-
-  <!-- Analyste -->
-  <h2>Analyste</h2>
-  <label>Nom de l'analyste :</label>
-  <input type="text" id="nom_analyste">
-  <label>Email :</label>
-  <input type="email" id="email_analyste">
-
-  <!-- Analyse -->
-  <h2>Analyse</h2>
-  <label>Date de l'analyse :</label>
-  <input type="date" id="date_analyse">
-  <label>Résultat :</label>
-  <textarea id="resultat_analyse"></textarea>
-
-  <button type="button" id="submit_button">Enregistrer</button>
+  <button type="submit">Ajouter</button>
 </form>
 
-<!-- Affichage des données -->
-<div class="display-section">
-  <h2>Données enregistrées</h2>
-  <div id="display_data"></div>
+<div class="entite-section">
+  <h2>Données enregistrées (localStorage)</h2>
+  <table id="tableEntites">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Données</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 </div>
 
 <script>
-  // Lors de la soumission du formulaire
-  document.getElementById('submit_button').addEventListener('click', function() {
-    let formData = {
-      nom_foret: document.getElementById('nom_foret').value,
-      localisation_foret: document.getElementById('localisation_foret').value,
-      superficie_foret: document.getElementById('superficie_foret').value,
-      nom_canton: document.getElementById('nom_canton').value,
-      code_canton: document.getElementById('code_canton').value,
-      id_espece: document.getElementById('id_espece').value,
-      nom_scientifique: document.getElementById('nom_scientifique').value,
-      nom_commun: document.getElementById('nom_commun').value,
-      nom_conservation: document.getElementById('nom_conservation').value,
-      id_conservation: document.getElementById('id_conservation').value,
-      adresse_conservation: document.getElementById('adresse_conservation').value,
-      conservateur: document.getElementById('conservateur').value,
-      nom_circonscription: document.getElementById('nom_circonscription').value,
-      id_circonscription: document.getElementById('id_circonscription').value,
-      adresse_circonscription: document.getElementById('adresse_circonscription').value,
-      responsable_circonscription: document.getElementById('responsable_circonscription').value,
-      nom_district: document.getElementById('nom_district').value,
-      chef_district: document.getElementById('chef_district').value,
-      nom_agent: document.getElementById('nom_agent').value,
-      matricule_agent: document.getElementById('matricule_agent').value,
-      date_op: document.getElementById('date_op').value,
-      description_op: document.getElementById('description_op').value,
-      diametre: document.getElementById('diametre').value,
-      hauteur: document.getElementById('hauteur').value,
-      nom_analyste: document.getElementById('nom_analyste').value,
-      email_analyste: document.getElementById('email_analyste').value,
-      date_analyse: document.getElementById('date_analyse').value,
-      resultat_analyse: document.getElementById('resultat_analyse').value
-    };
+const form = document.getElementById('formEntite');
+const typeSelect = document.getElementById('type');
+const fieldsContainer = document.getElementById('dynamic-fields');
+let entites = JSON.parse(localStorage.getItem('entites')) || [];
 
-    // Enregistrer les données dans le localStorage
-    localStorage.setItem('formData', JSON.stringify(formData));
+const fieldTemplates = {
+  espece: ['id', 'nom'],
+  foret: ['id', 'nom', 'superficie'],
+  canton: ['id', 'nom'],
+  conservation: ['id', 'nom', 'adresse', 'conservateur'],
+  circonscription: ['id', 'nom', 'adresse'],
+  district: ['id', 'nom', 'adresse'],
+  agent: ['nom', 'prenom', 'email'],
+  analyste: ['nom', 'prenom', 'email'],
+  analyse: ['date'],
+  operation: ['nom', 'description'],
+  donnee: ['hauteur', 'diametre', 'volume']
+};
 
-    // Afficher les données enregistrées
-    displayData();
+typeSelect.addEventListener('change', () => {
+  fieldsContainer.innerHTML = '';
+  const fields = fieldTemplates[typeSelect.value] || [];
+  fields.forEach(field => {
+    const input = document.createElement('input');
+    input.placeholder = field.charAt(0).toUpperCase() + field.slice(1);
+    input.name = field;
+    input.type = (field === 'email') ? 'email' : (field === 'date') ? 'date' : 'text';
+    fieldsContainer.appendChild(input);
+  });
+});
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const type = typeSelect.value;
+  const inputs = fieldsContainer.querySelectorAll('input');
+  const data = {};
+  inputs.forEach(input => data[input.name] = input.value);
+  const entry = { type, data };
+  entites.push(entry);
+  localStorage.setItem('entites', JSON.stringify(entites));
+
+  // Envoi vers base de données via PHP (à créer côté serveur)
+  fetch('insert.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(entry)
   });
 
-  // Fonction pour afficher les données enregistrées depuis localStorage
-  function displayData() {
-    const savedData = JSON.parse(localStorage.getItem('formData'));
-    if (savedData) {
-      let displayContent = "<ul>";
-      for (const key in savedData) {
-        displayContent += `<li><strong>${key.replace(/_/g, ' ')}:</strong> ${savedData[key]}</li>`;
-      }
-      displayContent += "</ul>";
-      document.getElementById('display_data').innerHTML = displayContent;
-    }
-  }
+  afficherEntites();
+  form.reset();
+  fieldsContainer.innerHTML = '';
+});
 
-  // Afficher les données dès le chargement de la page si elles existent
-  window.onload = function() {
-    displayData();
-  };
+function supprimerEntite(index) {
+  const item = entites[index];
+  entites.splice(index, 1);
+  localStorage.setItem('entites', JSON.stringify(entites));
+
+  // Requête DELETE (optionnelle selon logique backend)
+  fetch('delete.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(item)
+  });
+
+  afficherEntites();
+}
+
+function afficherEntites() {
+  const tbody = document.querySelector('#tableEntites tbody');
+  tbody.innerHTML = '';
+  entites.forEach((entite, index) => {
+    const data = Object.entries(entite.data).map(([key, val]) => `<strong>${key}</strong>: ${val}`).join('<br>');
+    tbody.innerHTML += `
+      <tr>
+        <td>${entite.type}</td>
+        <td>${data}</td>
+        <td><button class="delete-btn" onclick="supprimerEntite(${index})">Supprimer</button></td>
+      </tr>
+    `;
+  });
+}
+
+afficherEntites();
 </script>
 
 </body>
