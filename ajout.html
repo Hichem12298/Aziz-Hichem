@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Formulaires des 11 Entités</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gestion des 11 Entités</title>
   <style>
     body { font-family: Arial, sans-serif; background-color: #f0f8f5; padding: 20px; }
     h1 { color: #1b5e20; }
@@ -31,6 +31,12 @@
       border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
+    .entry {
+      margin-bottom: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
   </style>
 </head>
 <body>
@@ -44,6 +50,8 @@
   <input type="text" id="nom_foret">
   <label>Localisation :</label>
   <input type="text" id="localisation_foret">
+  <label>Superficie (ha) :</label>
+  <input type="number" id="superficie_foret">
 
   <!-- Canton -->
   <h2>Canton</h2>
@@ -54,6 +62,8 @@
 
   <!-- Espèce -->
   <h2>Espèce</h2>
+  <label>ID :</label>
+  <input type="text" id="id_espece">
   <label>Nom scientifique :</label>
   <input type="text" id="nom_scientifique">
   <label>Nom commun :</label>
@@ -61,23 +71,31 @@
 
   <!-- Conservation -->
   <h2>Conservation</h2>
-  <label>Nom de la conservation :</label>
+  <label>Nom :</label>
   <input type="text" id="nom_conservation">
+  <label>ID :</label>
+  <input type="text" id="id_conservation">
   <label>Adresse :</label>
   <input type="text" id="adresse_conservation">
+  <label>Conservateur :</label>
+  <input type="text" id="conservateur">
 
   <!-- Circonscription -->
   <h2>Circonscription</h2>
-  <label>Nom de la circonscription :</label>
+  <label>Nom :</label>
   <input type="text" id="nom_circonscription">
+  <label>ID :</label>
+  <input type="text" id="id_circonscription">
+  <label>Adresse :</label>
+  <input type="text" id="adresse_circonscription">
   <label>Responsable :</label>
   <input type="text" id="responsable_circonscription">
 
   <!-- District -->
   <h2>District</h2>
-  <label>Nom du district :</label>
+  <label>Nom :</label>
   <input type="text" id="nom_district">
-  <label>Chef de district :</label>
+  <label>Chef :</label>
   <input type="text" id="chef_district">
 
   <!-- Agent de Récolte -->
@@ -105,8 +123,8 @@
   <h2>Analyste</h2>
   <label>Nom de l'analyste :</label>
   <input type="text" id="nom_analyste">
-  <label>Spécialité :</label>
-  <input type="text" id="specialite_analyste">
+  <label>Email :</label>
+  <input type="email" id="email_analyste">
 
   <!-- Analyse -->
   <h2>Analyse</h2>
@@ -130,13 +148,19 @@
     let formData = {
       nom_foret: document.getElementById('nom_foret').value,
       localisation_foret: document.getElementById('localisation_foret').value,
+      superficie_foret: document.getElementById('superficie_foret').value,
       nom_canton: document.getElementById('nom_canton').value,
       code_canton: document.getElementById('code_canton').value,
+      id_espece: document.getElementById('id_espece').value,
       nom_scientifique: document.getElementById('nom_scientifique').value,
       nom_commun: document.getElementById('nom_commun').value,
       nom_conservation: document.getElementById('nom_conservation').value,
+      id_conservation: document.getElementById('id_conservation').value,
       adresse_conservation: document.getElementById('adresse_conservation').value,
+      conservateur: document.getElementById('conservateur').value,
       nom_circonscription: document.getElementById('nom_circonscription').value,
+      id_circonscription: document.getElementById('id_circonscription').value,
+      adresse_circonscription: document.getElementById('adresse_circonscription').value,
       responsable_circonscription: document.getElementById('responsable_circonscription').value,
       nom_district: document.getElementById('nom_district').value,
       chef_district: document.getElementById('chef_district').value,
@@ -147,7 +171,7 @@
       diametre: document.getElementById('diametre').value,
       hauteur: document.getElementById('hauteur').value,
       nom_analyste: document.getElementById('nom_analyste').value,
-      specialite_analyste: document.getElementById('specialite_analyste').value,
+      email_analyste: document.getElementById('email_analyste').value,
       date_analyse: document.getElementById('date_analyse').value,
       resultat_analyse: document.getElementById('resultat_analyse').value
     };
@@ -157,8 +181,6 @@
 
     // Afficher les données enregistrées
     displayData();
-
-    // Vous pouvez également envoyer les données à un serveur via PHP (non montré ici)
   });
 
   // Fonction pour afficher les données enregistrées depuis localStorage

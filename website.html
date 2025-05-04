@@ -75,6 +75,9 @@
       max-width: 800px;
       margin: auto;
     }
+    .hidden {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -127,16 +130,19 @@
         <button onclick="location.href='dendometrique.html'">Entrer les Données</button>
         <button onclick="location.href='contact.html'">Contact</button>
         <button onclick="location.href='login.html'">Connexion Agent de Conservation</button>
+        <button onclick="location.href='ajout.html'">Ajouter Entité</button>
       `;
     } else if (user.role === 'analyste') {
       menu.innerHTML += `
         <button onclick="location.href='analyse.html'">Analyser les Données</button>
         <button onclick="location.href='contact.html'">Contact</button>
+        <button onclick="location.href='ajout.html'">Ajouter Entité</button>
       `;
     } else if (user.role === 'employe') {
       menu.innerHTML += `
         <button onclick="location.href='surveillance.html'">Surveiller les Données</button>
         <button onclick="location.href='contact.html'">Contact</button>
+        <button onclick="location.href='ajout.html'">Ajouter Entité</button>
       `;
     } else if (user.role === 'public') {
       menu.innerHTML += `
