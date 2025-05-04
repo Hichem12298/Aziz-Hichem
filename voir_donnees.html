@@ -1,118 +1,135 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voir les Données Dendrométriques</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #ecf0f1;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Voir les Données Dendrométriques</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #ecf0f1;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      height: 100vh;
+    }
 
-        h1 {
-            margin-top: 20px;
-            font-size: 36px;
-            color: #2c3e50;
-        }
+    h1 {
+      margin-top: 20px;
+      font-size: 36px;
+      color: #2c3e50;
+    }
 
-        table {
-            width: 80%;
-            border-collapse: collapse;
-            margin-top: 30px;
-            background-color: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
+    table {
+      width: 90%;
+      border-collapse: collapse;
+      margin-top: 30px;
+      background-color: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
 
-        th, td {
-            padding: 12px;
-            text-align: center;
-            border: 1px solid #ddd;
-        }
+    th, td {
+      padding: 12px;
+      text-align: center;
+      border: 1px solid #ddd;
+    }
 
-        th {
-            background-color: #34495e;
-            color: white;
-        }
+    th {
+      background-color: #34495e;
+      color: white;
+    }
 
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
 
-        tr:hover {
-            background-color: #f1f1f1;
-        }
+    tr:hover {
+      background-color: #f1f1f1;
+    }
 
-        .back-btn {
-            margin-top: 30px;
-            padding: 12px 20px;
-            background-color: #2c3e50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background 0.3s;
-        }
+    .btn {
+      margin-top: 20px;
+      padding: 12px 20px;
+      background-color: #2c3e50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
 
-        .back-btn:hover {
-            background-color: #34495e;
-        }
-    </style>
+    .btn:hover {
+      background-color: #34495e;
+    }
+  </style>
 </head>
 <body>
 
-    <h1>Données Dendrométriques des Arbres</h1>
+  <h1>Données Dendrométriques des Arbres</h1>
 
-    <!-- Tableau des données -->
-    <table id="treesTable">
-        <thead>
-            <tr>
-                <th>Espèce</th>
-                <th>Diamètre (cm)</th>
-                <th>Hauteur (m)</th>
-                <th>Localisation</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Les données seront insérées ici dynamiquement -->
-        </tbody>
-    </table>
+  <!-- Tableau des données -->
+  <table id="treesTable">
+    <thead>
+      <tr>
+        <th>Sélection</th>
+        <th>Espèce</th>
+        <th>Diamètre (cm)</th>
+        <th>Hauteur (m)</th>
+        <th>Localisation</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Les données seront insérées ici dynamiquement -->
+    </tbody>
+  </table>
 
-    <button class="back-btn" onclick="window.location.href = 'index.html';">Retour</button>
+  <button class="btn" onclick="supprimerSelection()">Supprimer la sélection</button>
+  <button class="btn" onclick="window.location.href = 'index.html';">Retour</button>
 
-    <script>
-        // Récupérer les données du localStorage
-        const trees = JSON.parse(localStorage.getItem('trees')) || [];
+  <script>
+    let trees = JSON.parse(localStorage.getItem('trees')) || [];
+    const tbody = document.querySelector('#treesTable tbody');
 
-        // Sélectionner le corps du tableau
-        const tbody = document.querySelector('#treesTable tbody');
+    function afficherTableau() {
+      tbody.innerHTML = '';
+      if (trees.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5">Aucune donnée enregistrée.</td></tr>';
+        return;
+      }
 
-        // Si aucune donnée n'est présente
-        if (trees.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="4">Aucune donnée enregistrée.</td></tr>';
-        } else {
-            // Afficher chaque arbre dans le tableau
-            trees.forEach(tree => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${tree.species}</td>
-                    <td>${tree.diameter} cm</td>
-                    <td>${tree.height} m</td>
-                    <td>${tree.location}</td> <!-- Affichage de la localisation -->
-                `;
-                tbody.appendChild(row);
-            });
-        }
-    </script>
+      trees.forEach((tree, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><input type="checkbox" class="select-checkbox" data-index="${index}"></td>
+          <td>${tree.species}</td>
+          <td>${tree.diameter} cm</td>
+          <td>${tree.height} m</td>
+          <td>${tree.location}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function supprimerSelection() {
+      const checkboxes = document.querySelectorAll('.select-checkbox:checked');
+      if (checkboxes.length === 0) {
+        alert("Veuillez sélectionner au moins une ligne à supprimer.");
+        return;
+      }
+
+      const indexesToDelete = Array.from(checkboxes).map(cb => parseInt(cb.getAttribute('data-index')));
+      trees = trees.filter((_, index) => !indexesToDelete.includes(index));
+      localStorage.setItem('trees', JSON.stringify(trees));
+      afficherTableau();
+    }
+
+    afficherTableau();
+  </script>
 
 </body>
 </html>

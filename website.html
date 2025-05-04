@@ -24,6 +24,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      flex-direction: column;
     }
     .login-box {
       background-color: #2c3e50;
@@ -81,25 +82,34 @@
   </style>
 </head>
 <body>
+
+<!-- Connexion ou accès public -->
 <div class="login-container" id="loginContainer">
   <div class="login-box">
     <h2>Connexion</h2>
     <input type="email" id="loginEmail" placeholder="Email">
     <input type="password" id="loginPassword" placeholder="Mot de passe">
     <button onclick="connexion()">Se connecter</button>
+    <hr>
+    <button onclick="accesPublic()">Accès Public</button>
   </div>
 </div>
+
+<!-- Sidebar -->
 <div class="sidebar hidden" id="sidebar">
   <h2>Tableau de Bord</h2>
   <div class="menu" id="menuButtons"></div>
   <button class="logout-btn" onclick="logout()">Déconnexion</button>
 </div>
+
+<!-- Contenu principal -->
 <div class="main-content">
   <div class="card" id="welcome">
     <h2>Bienvenue dans la Conservation des forêts de la wilaya de Mostaganem</h2>
     <p>Veuillez utiliser les boutons à gauche selon votre rôle pour accéder aux fonctionnalités.</p>
   </div>
 </div>
+
 <script>
   let utilisateurs = JSON.parse(localStorage.getItem('utilisateurs')) || [
     { email: "administrateur@gmail.com", password: "123", role: "admin", accepte: true }
@@ -117,6 +127,15 @@
     chargerInterfaceUtilisateur(user);
   }
 
+  // 🎯 Accès public sans connexion
+  function accesPublic() {
+    const publicUser = { role: "public" };
+    localStorage.setItem('currentUser', JSON.stringify(publicUser));
+    document.getElementById('loginContainer').classList.add('hidden');
+    document.getElementById('sidebar').classList.remove('hidden');
+    chargerInterfaceUtilisateur(publicUser);
+  }
+
   function chargerInterfaceUtilisateur(user) {
     const menu = document.getElementById('menuButtons');
     menu.innerHTML = '';
@@ -129,7 +148,6 @@
       menu.innerHTML += `
         <button onclick="location.href='dendometrique.html'">Entrer les Données</button>
         <button onclick="location.href='contact.html'">Contact</button>
-        <button onclick="location.href='login.html'">Connexion Agent de Conservation</button>
         <button onclick="location.href='ajout.html'">Ajouter Entité</button>
       `;
     } else if (user.role === 'analyste') {
@@ -147,6 +165,7 @@
     } else if (user.role === 'public') {
       menu.innerHTML += `
         <button onclick="location.href='contact.html'">Contact</button>
+        <button onclick="location.href='voir_donnees.html'">Consulter les Données</button>
       `;
     }
   }
@@ -165,5 +184,6 @@
     }
   }
 </script>
+
 </body>
 </html>
