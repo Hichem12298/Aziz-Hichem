@@ -59,13 +59,12 @@
 </form>
 
 <div class="entite-section">
-  <h2>Données enregistrées (localStorage)</h2>
+  <h2>Données enregistrées</h2>
   <table id="tableEntites">
     <thead>
       <tr>
         <th>Type</th>
         <th>Données</th>
-        <th>Action</th>
       </tr>
     </thead>
     <tbody></tbody>
@@ -73,91 +72,119 @@
 </div>
 
 <script>
-const form = document.getElementById('formEntite');
-const typeSelect = document.getElementById('type');
-const fieldsContainer = document.getElementById('dynamic-fields');
-let entites = JSON.parse(localStorage.getItem('entites')) || [];
-
-const fieldTemplates = {
-  espece: ['id', 'nom'],
-  foret: ['id', 'nom', 'superficie'],
-  canton: ['id', 'nom'],
-  conservation: ['id', 'nom', 'adresse', 'conservateur'],
-  circonscription: ['id', 'nom', 'adresse'],
-  district: ['id', 'nom', 'adresse'],
-  agent: ['nom', 'prenom', 'email'],
-  analyste: ['nom', 'prenom', 'email'],
-  analyse: ['date'],
-  operation: ['nom', 'description'],
-  donnee: ['hauteur', 'diametre', 'volume']
-};
-
-typeSelect.addEventListener('change', () => {
-  fieldsContainer.innerHTML = '';
-  const fields = fieldTemplates[typeSelect.value] || [];
-  fields.forEach(field => {
-    const input = document.createElement('input');
-    input.placeholder = field.charAt(0).toUpperCase() + field.slice(1);
-    input.name = field;
-    input.type = (field === 'email') ? 'email' : (field === 'date') ? 'date' : 'text';
-    fieldsContainer.appendChild(input);
+  const form = document.getElementById('formEntite');
+  const typeSelect = document.getElementById('type');
+  const fieldsContainer = document.getElementById('dynamic-fields');
+  const tableBody = document.querySelector('#tableEntites tbody');
+  
+  const fieldTemplates = {
+    espece: ['nom'],
+    foret: ['nom', 'superficie'],
+    canton: ['nom', 'id_foret'], // id_foret sera une liste déroulante
+    conservation: ['nom', 'adresse', 'conservateur'],
+    circonscription: ['nom', 'adresse'],
+    district: ['nom', 'adresse'],
+    agent: ['nom', 'prenom', 'email'],
+    analyste: ['nom', 'prenom', 'email'],
+    analyse: ['date'],
+    operation: ['nom', 'description'],
+    donnee: ['hauteur', 'diametre', 'volume']
+  };
+  
+  // Charger les données depuis la base de données
+  async function fetchEntites() {
+    try {
+      const response = await fetch('fetch_data.php');
+      const entites = await response.json();
+  
+      tableBody.innerHTML = '';
+      entites.forEach(entite => {
+        const data = Object.entries(entite.data).map(([key, val]) => `<strong>${key}</strong>: ${val}`).join('<br>');
+        tableBody.innerHTML += `
+          <tr>
+            <td>${entite.type}</td>
+            <td>${data}</td>
+          </tr>
+        `;
+      });
+    } catch (error) {
+      console.error('Erreur lors de la récupération des données:', error);
+    }
+  }
+  
+  // Ajouter dynamiquement les champs en fonction du type sélectionné
+  typeSelect.addEventListener('change', async () => {
+    fieldsContainer.innerHTML = '';
+    const fields = fieldTemplates[typeSelect.value] || [];
+  
+    for (const field of fields) {
+      if (typeSelect.value === 'canton' && field === 'id_foret') {
+        // Si le type est "Canton" et le champ est "id_foret", charger les forêts
+        const label = document.createElement('label');
+        label.textContent = 'Forêt :';
+        const select = document.createElement('select');
+        select.name = 'id_foret';
+        select.required = true;
+  
+        try {
+          const response = await fetch('fetch_forets.php');
+          const forets = await response.json();
+  
+          forets.forEach(foret => {
+            const option = document.createElement('option');
+            option.value = foret.id;
+            option.textContent = foret.nom;
+            select.appendChild(option);
+          });
+        } catch (error) {
+          console.error('Erreur lors de la récupération des forêts:', error);
+        }
+  
+        fieldsContainer.appendChild(label);
+        fieldsContainer.appendChild(select);
+      } else {
+        // Pour les autres champs, créer un champ texte
+        const input = document.createElement('input');
+        input.placeholder = field.charAt(0).toUpperCase() + field.slice(1);
+        input.name = field;
+        input.type = (field === 'email') ? 'email' : (field === 'date') ? 'date' : 'text';
+        fieldsContainer.appendChild(input);
+      }
+    }
   });
-});
-
-form.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const type = typeSelect.value;
-  const inputs = fieldsContainer.querySelectorAll('input');
-  const data = {};
-  inputs.forEach(input => data[input.name] = input.value);
-  const entry = { type, data };
-  entites.push(entry);
-  localStorage.setItem('entites', JSON.stringify(entites));
-
-  // Envoi vers base de données via PHP (à créer côté serveur)
-  fetch('insert.php', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(entry)
+  
+  // Ajouter une nouvelle entité dans la base de données
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const type = typeSelect.value;
+    const inputs = fieldsContainer.querySelectorAll('input, select');
+    const data = {};
+    inputs.forEach(input => data[input.name] = input.value);
+  
+    try {
+      const response = await fetch('insert.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type, data })
+      });
+  
+      const result = await response.json();
+      if (result.message) {
+        console.log(result.message);
+        fetchEntites(); // Recharger les données après l'ajout
+        form.reset();
+        fieldsContainer.innerHTML = '';
+      } else {
+        console.error('Erreur:', result.error);
+      }
+    } catch (error) {
+      console.error('Erreur lors de l\'ajout de l\'entité:', error);
+    }
   });
-
-  afficherEntites();
-  form.reset();
-  fieldsContainer.innerHTML = '';
-});
-
-function supprimerEntite(index) {
-  const item = entites[index];
-  entites.splice(index, 1);
-  localStorage.setItem('entites', JSON.stringify(entites));
-
-  // Requête DELETE (optionnelle selon logique backend)
-  fetch('delete.php', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(item)
-  });
-
-  afficherEntites();
-}
-
-function afficherEntites() {
-  const tbody = document.querySelector('#tableEntites tbody');
-  tbody.innerHTML = '';
-  entites.forEach((entite, index) => {
-    const data = Object.entries(entite.data).map(([key, val]) => `<strong>${key}</strong>: ${val}`).join('<br>');
-    tbody.innerHTML += `
-      <tr>
-        <td>${entite.type}</td>
-        <td>${data}</td>
-        <td><button class="delete-btn" onclick="supprimerEntite(${index})">Supprimer</button></td>
-      </tr>
-    `;
-  });
-}
-
-afficherEntites();
-</script>
+  
+  // Charger les données au chargement de la page
+  fetchEntites();
+  </script>
 
 </body>
 </html>

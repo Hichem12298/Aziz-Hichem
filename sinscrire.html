@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inscription - Conservation des Forêts</title>
+  <style>
+    body {
+      background-image: url('thumb_automne-chemin-foret-dourdan-01.jpg');
+      background-repeat: no-repeat;
+      background-size: cover;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: white;
+    }
+    .form-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    .signup-box {
+      background-color: #2c3e50;
+      padding: 30px;
+      border-radius: 10px;
+      width: 300px;
+      text-align: center;
+    }
+    input {
+      width: 80%;
+      margin-bottom: 15px;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      width: 80%;
+      padding: 10px;
+      border-radius: 5px;
+      background: #1abc9c;
+      color: white;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #16a085;
+    }
+    .cancel-btn {
+      background: red;
+    }
+    .cancel-btn:hover {
+      background: darkred;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <div class="signup-box">
+      <h2>Inscription</h2>
+      <input type="email" id="signupEmail" placeholder="Email" required>
+      <input type="password" id="signupPassword" placeholder="Mot de passe" required>
+      <button onclick="sinscrire()">S'inscrire</button>
+      <button class="cancel-btn" onclick="annulerInscription()">Annuler</button>
+    </div>
+  </div>
+
+  <script>
+    let utilisateurs = JSON.parse(localStorage.getItem('utilisateurs')) || [
+      { email: "administrateur@gmail.com", password: "123", role: "admin", accepte: true }
+    ];
+
+    function sinscrire() {
+      const email = document.getElementById('signupEmail').value;
+      const password = document.getElementById('signupPassword').value;
+
+      if (!email || !password) {
+        return alert("Tous les champs sont requis.");
+      }
+
+      // Envoi de la demande d'activation à l'administrateur
+      const newUser = { email, password, role: "user", accepte: false };
+      utilisateurs.push(newUser);
+      localStorage.setItem('utilisateurs', JSON.stringify(utilisateurs));
+
+      // Alerte pour signaler que la demande a été envoyée
+      alert("Votre demande d'inscription a été envoyée à l'administrateur pour validation.");
+
+      // Redirection vers la page de connexion ou page d'accueil
+      window.location.href = 'index.html'; // Modifier avec l'URL de la page de connexion ou autre page
+    }
+
+    function annulerInscription() {
+      // Retour à la page de connexion ou autre action
+      window.location.href = 'index.html'; // Modifier avec l'URL de la page de connexion
+    }
+  </script>
+
+</body>
+</html>
