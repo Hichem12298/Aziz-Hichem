@@ -204,7 +204,9 @@
   // Charger l'interface utilisateur selon son rôle
   function chargerInterfaceUtilisateur(user) {
     const menu = document.getElementById('menuButtons');
-    menu.innerHTML = '';
+    menu.innerHTML = ''; // Vider les boutons existants
+    console.log("Rôle de l'utilisateur:", user.role); // Afficher le rôle dans la console
+
     if (user.role === 'admin') {
       menu.innerHTML += 
         '<button onclick="location.href=\'admin.html\'">Gérer les utilisateurs</button>' +
@@ -222,7 +224,7 @@
     } else if (user.role === 'conservation') {
       menu.innerHTML += 
         '<button onclick="location.href=\'ajout.html\'">Ajouter Entité</button>' +
-        '<button onclick="location.href=\'login.html\'">login agent de conservation</button>' +
+         '<button onclick="location.href=\'login.html\'">login agent de conservation</button>' +
         '<button onclick="location.href=\'contact.html\'">Contact</button>';
     } else if (user.role === 'surveillance') {
       menu.innerHTML += 
