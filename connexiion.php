@@ -1,42 +1,54 @@
 <?php
-// Paramètres de connexion à la base
-$host = "localhost";
-$dbname = "conservation_foret";
-$user = "root"; // ou autre selon ta config
-$pass = "";     // ou mot de passe si défini
+session_start();
+$host = 'localhost'; // Votre hôte de base de données
+$user = 'root'; // Votre utilisateur de base de données
+$password = ''; // Votre mot de passe de base de données
+$dbname = 'conservation_forêts'; // Nom de votre base de données
 
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $pass);
-} catch (PDOException $e) {
-    die("Erreur de connexion : " . $e->getMessage());
+// Connexion à la base de données MySQL
+$conn = new mysqli($host, $user, $password, $dbname);
+
+// Vérifier la connexion
+if ($conn->connect_error) {
+    die("Connexion échouée : " . $conn->connect_error);
 }
 
-// Vérifie si le formulaire a été soumis
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $email = $_POST["email"];
-    $password = password_hash($_POST["password"], PASSWORD_DEFAULT); // 🔒 Hachage sécurisé
-    $role = $_POST["role"];
+// Inscription d'un nouvel utilisateur
+if (isset($_POST['inscription'])) {
+    $email = $_POST['email'];
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Hasher le mot de passe
+    $role = $_POST['role'];
 
-    // Vérifie que les champs ne sont pas vides
-    if (empty($email) || empty($password) || empty($role)) {
-        die("Tous les champs sont obligatoires.");
+    $sql = "INSERT INTO utilisateurs (email, password, role) VALUES ('$email', '$password', '$role')";
+    
+    if ($conn->query($sql) === TRUE) {
+        echo "Inscription réussie ! Vous pouvez maintenant vous connecter.";
+    } else {
+        echo "Erreur : " . $conn->error;
     }
+}
 
-    // Prépare et exécute la requête d'insertion
-    $sql = "INSERT INTO utilisateurs (email, password, role, accepte) VALUES (?, ?, ?, 0)";
-    $stmt = $pdo->prepare($sql);
-    try {
-        $stmt->execute([$email, $password, $role]);
-        echo "<h2>Inscription réussie ! En attente de validation par l'administrateur.</h2>";
-        echo "<a href='index.html'>Retour à la connexion</a>";
-    } catch (PDOException $e) {
-        if ($e->getCode() == 23000) {
-            echo "Cet email est déjà utilisé.";
+// Connexion d'un utilisateur existant
+if (isset($_POST['connexion'])) {
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+
+    $sql = "SELECT * FROM utilisateurs WHERE email = '$email'";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+        if (password_verify($password, $user['password'])) {
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['role'] = $user['role'];
+            header("Location: website.html"); // Rediriger vers la page d'accueil après connexion
         } else {
-            echo "Erreur lors de l'inscription : " . $e->getMessage();
+            echo "Mot de passe incorrect.";
         }
+    } else {
+        echo "Aucun utilisateur trouvé avec cet email.";
     }
-} else {
-    echo "Méthode non autorisée.";
 }
+
+$conn->close();
 ?>
