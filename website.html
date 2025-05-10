@@ -1,69 +1,107 @@
+<!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Conservation des Forêts</title>
   <style>
-    /* Styles de base */
+    /* Styles de base modernisés */
     body {
-      background-image: url('thumb_automne-chemin-foret-dourdan-01.jpg');
+      background: linear-gradient(to bottom, rgba(34, 193, 195, 0.8), rgba(253, 187, 45, 0.8)), url('thumb_automne-chemin-foret-dourdan-01.jpg');
       background-repeat: no-repeat;
       background-size: cover;
       height: 100vh;
       margin: 0;
-      font-family: 'Arial', sans-serif;
+      font-family: 'Poppins', sans-serif;
       color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
+
     .login-container, .register-container {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(0, 0, 0, 0.7);
+      background-color: rgba(0, 0, 0, 0.85);
       display: flex;
       justify-content: center;
       align-items: center;
       flex-direction: column;
+      animation: fadeIn 0.5s ease-in-out;
     }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
     .login-box, .register-box {
-      background-color: #34495e;
-      padding: 30px;
-      border-radius: 15px;
-      width: 320px;
+      background: linear-gradient(145deg, #ffffff, #f0f0f0);
+      padding: 40px;
+      border-radius: 20px;
+      width: 400px;
       text-align: center;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      color: #333;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
+
+    .login-box:hover, .register-box:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+    }
+
     h2 {
-      font-size: 24px;
+      font-size: 28px;
       margin-bottom: 20px;
+      color: #2c3e50;
     }
+
     input, select {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       margin: 10px 0;
-      border-radius: 5px;
-      border: 1px solid #95a5a6;
-      background-color: #ecf0f1;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      background-color: #f9f9f9;
+      font-size: 16px;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: border-color 0.3s ease;
     }
+
+    input:focus, select:focus {
+      border-color: #3498db;
+      outline: none;
+    }
+
     button {
       padding: 12px 20px;
       width: 100%;
-      border-radius: 5px;
+      border-radius: 10px;
       border: none;
-      background-color: #16a085;
+      background: linear-gradient(145deg, #3498db, #2980b9);
       color: white;
       font-size: 16px;
       cursor: pointer;
-      transition: background-color 0.3s;
+      transition: background 0.3s ease, transform 0.2s ease;
     }
+
     button:hover {
-      background-color: #1abc9c;
+      background: linear-gradient(145deg, #2980b9, #3498db);
+      transform: translateY(-2px);
     }
+
     .sidebar {
       width: 250px;
       height: 100%;
-      background: #2c3e50;
+      background: linear-gradient(145deg, #34495e, #2c3e50);
       padding: 20px;
       position: fixed;
       top: 0;
@@ -71,39 +109,56 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
     }
+
+    .sidebar h2 {
+      color: white;
+      margin-bottom: 20px;
+      font-size: 22px;
+    }
+
     .sidebar button {
       width: 100%;
       margin-bottom: 15px;
-      padding: 10px;
-      border-radius: 5px;
+      padding: 12px;
+      border-radius: 10px;
       border: none;
       font-size: 16px;
-      background: #34495e;
+      background: linear-gradient(145deg, #2ecc71, #27ae60);
       color: white;
       cursor: pointer;
-      transition: 0.3s;
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
     }
+
     .sidebar button:hover {
-      background: #1abc9c;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
     }
+
     .logout-btn {
       margin-top: auto;
-      background: #e74c3c;
+      background: linear-gradient(145deg, #e74c3c, #c0392b);
       color: white;
     }
+
     .main-content {
       margin-left: 260px;
       padding: 40px;
+      color: white;
     }
+
     .card {
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba(255, 255, 255, 0.9);
       padding: 30px;
-      border-radius: 10px;
+      border-radius: 20px;
       max-width: 800px;
       margin: auto;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      color: #333;
+      text-align: center;
     }
+
     .hidden {
       display: none;
     }
@@ -205,35 +260,57 @@
   function chargerInterfaceUtilisateur(user) {
     const menu = document.getElementById('menuButtons');
     menu.innerHTML = ''; // Vider les boutons existants
-    console.log("Rôle de l'utilisateur:", user.role); // Afficher le rôle dans la console
 
-    if (user.role === 'admin') {
-      menu.innerHTML += 
-        '<button onclick="location.href=\'admin.html\'">Gérer les utilisateurs</button>' +
-        '<button onclick="location.href=\'ajouter.html\'">Ajouter un utilisateur</button>';
-    } else if (user.role === 'agent') {
-      menu.innerHTML += 
-        '<button onclick="location.href=\'dendometrique.html\'">Entrer les Données</button>' +
-        '<button onclick="location.href=\'contact.html\'">Contact</button>' +
-        '<button onclick="location.href=\'ajout.html\'">Ajouter Entité</button>';
-    } else if (user.role === 'analyste') {
-      menu.innerHTML += 
-        '<button onclick="location.href=\'analyse.html\'">Analyser les Données</button>' +
-        '<button onclick="location.href=\'contact.html\'">Contact</button>' +
-        '<button onclick="location.href=\'ajout.html\'">Ajouter Entité</button>';
-    } else if (user.role === 'conservation') {
-      menu.innerHTML += 
-        '<button onclick="location.href=\'ajout.html\'">Ajouter Entité</button>' +
-         '<button onclick="location.href=\'login.html\'">login agent de conservation</button>' +
-        '<button onclick="location.href=\'contact.html\'">Contact</button>';
-    } else if (user.role === 'surveillance') {
-      menu.innerHTML += 
-        '<button onclick="location.href=\'surveillance.html\'">Surveillance</button>' +
-        '<button onclick="location.href=\'contact.html\'">Contact</button>';
-    } else if (user.role === 'public') {
-      menu.innerHTML += 
-        '<button onclick="location.href=\'contact.html\'">Contact</button>' +
-        '<button onclick="location.href=\'voir_donnees.html\'">Consulter les Données</button>';
+    switch (user.role) {
+      case 'admin':
+        menu.innerHTML += `
+          <button onclick="location.href='admin.html'">Gérer les utilisateurs</button>
+          <button onclick="location.href='ajouter.html'">Ajouter un utilisateur</button>
+        `;
+        break;
+
+      case 'agent':
+        menu.innerHTML += `
+          <button onclick="location.href='dendometrique.html'">Entrer les Données</button>
+          <button onclick="location.href='contact.html'">Contact</button>
+          <button onclick="location.href='ajout.html'">Ajouter Entité</button>
+        `;
+        break;
+
+      case 'analyste':
+        menu.innerHTML += `
+          <button onclick="location.href='analyse.html'">Analyser les Données</button>
+          <button onclick="location.href='contact.html'">Contact</button>
+          <button onclick="location.href='ajout.html'">Ajouter Entité</button>
+        `;
+        break;
+
+      case 'conservation':
+        menu.innerHTML += `
+          <button onclick="location.href='ajout.html'">Ajouter Entité</button>
+          <button onclick="location.href='contact.html'">Contact</button>
+<button onclick="location.href='login.html'">login agent de conservation</button>
+        `;
+        break;
+
+      case 'surveillance':
+        menu.innerHTML += `
+          <button onclick="location.href='surveillance.html'">Surveillance</button>
+          <button onclick="location.href='contact.html'">Contact</button>
+        `;
+        break;
+
+      case 'public':
+        menu.innerHTML += `
+          <button onclick="location.href='contact.html'">Contact</button>
+          <button onclick="location.href='voir_donnees.html'">Consulter les Données</button>
+        `;
+        break;
+
+      default:
+        console.error("Rôle inconnu :", user.role);
+        alert("Rôle inconnu. Veuillez contacter l'administrateur.");
+        break;
     }
   }
 
