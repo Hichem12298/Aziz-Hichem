@@ -34,7 +34,9 @@ try {
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$nom, $prenom, $email, $hashed_password, $role, 0]);
 
-        echo "Utilisateur ajouté avec succès !";
+        // Return a JSON response indicating success
+        echo json_encode(["success" => true, "message" => "Utilisateur ajouté avec succès !"]);
+        exit();
     }
 } catch (PDOException $e) {
     echo "Erreur : " . $e->getMessage();
