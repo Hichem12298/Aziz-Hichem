@@ -219,7 +219,7 @@
     { email: "administrateur@gmail.com", password: "123", role: "admin", accepte: true }
   ];
 
-  // Connexion
+  // Improved login function
   async function connexion() {
     const email = document.getElementById('loginEmail').value;
     const password = document.getElementById('loginPassword').value;
@@ -234,6 +234,7 @@
       const result = await response.json();
       if (result.success) {
         alert('Connexion réussie ! Bienvenue, ' + result.user.role + '.');
+        localStorage.setItem('currentUser', JSON.stringify(result.user));
         document.getElementById('loginContainer').classList.add('hidden');
         document.getElementById('sidebar').classList.remove('hidden');
         chargerInterfaceUtilisateur(result.user);
@@ -246,7 +247,7 @@
     }
   }
 
-  // Inscription
+  // Improved registration function
   async function inscription() {
     const email = document.getElementById('registerEmail').value;
     const password = document.getElementById('registerPassword').value;
@@ -284,10 +285,10 @@
     document.getElementById('registerContainer').classList.remove('hidden');
   }
 
-  // Charger l'interface utilisateur selon son rôle
+  // Ensure the interface dynamically adjusts based on the user's role
   function chargerInterfaceUtilisateur(user) {
     const menu = document.getElementById('menuButtons');
-    menu.innerHTML = ''; // Vider les boutons existants
+    menu.innerHTML = ''; // Clear existing buttons
 
     switch (user.role) {
       case 'admin':
@@ -296,48 +297,39 @@
           <button onclick="location.href='ajouter.html'">Ajouter un utilisateur</button>
         `;
         break;
-
       case 'agent':
         menu.innerHTML += `
           <button onclick="location.href='dendometrique.html'">Entrer les Données</button>
           <button onclick="location.href='contact.html'">Contact</button>
-          <button onclick="location.href='ajout.html'">Ajouter Entité</button>
         `;
         break;
-
       case 'analyste':
         menu.innerHTML += `
           <button onclick="location.href='analyse.html'">Analyser les Données</button>
           <button onclick="location.href='contact.html'">Contact</button>
-          <button onclick="location.href='ajout.html'">Ajouter Entité</button>
         `;
         break;
-
       case 'conservation':
         menu.innerHTML += `
           <button onclick="location.href='ajout.html'">Ajouter Entité</button>
           <button onclick="location.href='contact.html'">Contact</button>
-<button onclick="location.href='login.html'">login agent de conservation</button>
         `;
         break;
-
       case 'surveillance':
         menu.innerHTML += `
           <button onclick="location.href='surveillance.html'">Surveillance</button>
           <button onclick="location.href='contact.html'">Contact</button>
         `;
         break;
-
       case 'public':
         menu.innerHTML += `
           <button onclick="location.href='contact.html'">Contact</button>
           <button onclick="location.href='voir_donnees.html'">Consulter les Données</button>
         `;
         break;
-
       default:
-        console.error("Rôle inconnu :", user.role);
-        alert("Rôle inconnu. Veuillez contacter l'administrateur.");
+        console.error('Rôle inconnu :', user.role);
+        alert('Rôle inconnu. Veuillez contacter l\'administrateur.');
         break;
     }
   }
@@ -348,6 +340,7 @@
     location.reload();
   }
 
+  // Ensure the login form is shown if no user is logged in
   window.onload = () => {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     if (currentUser) {
@@ -357,7 +350,7 @@
     } else {
       document.getElementById('loginContainer').classList.remove('hidden');
     }
-  }
+  };
 </script>
 
 </body>
