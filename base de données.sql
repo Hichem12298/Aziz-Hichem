@@ -76,7 +76,23 @@ CREATE TABLE IF NOT EXISTS operation (
 -- Table pour la Donnée dendrométrique
 CREATE TABLE IF NOT EXISTS donnee (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    hauteur FLOAT NOT NULL,
-    diametre FLOAT NOT NULL,
-    volume FLOAT NOT NULL
+    species VARCHAR(255) NOT NULL,
+    diameter FLOAT NOT NULL,
+    height FLOAT NOT NULL,
+    location VARCHAR(255) NOT NULL
 );
+
+-- Table pour les utilisateurs
+CREATE TABLE IF NOT EXISTS utilisateurs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    role VARCHAR(50) NOT NULL,
+    accepte BOOLEAN DEFAULT FALSE
+);
+
+-- Insert sample data into the 'donnee' table
+INSERT INTO donnee (species, diameter, height, location) VALUES
+('Chêne', 30.5, 15.2, 'France'),
+('Pin', 25.0, 20.0, 'Canada'),
+('Érable', 20.0, 10.5, 'États-Unis');

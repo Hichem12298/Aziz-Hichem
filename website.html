@@ -220,28 +220,56 @@
   ];
 
   // Connexion
-  function connexion() {
+  async function connexion() {
     const email = document.getElementById('loginEmail').value;
     const password = document.getElementById('loginPassword').value;
-    const user = utilisateurs.find(u => u.email === email && u.password === password);
-    if (!user) return alert("Utilisateur non trouvé ou mot de passe incorrect.");
-    if (!user.accepte) return alert("Compte en attente de validation par l'administrateur.");
-    localStorage.setItem('currentUser', JSON.stringify(user));
-    document.getElementById('loginContainer').classList.add('hidden');
-    document.getElementById('sidebar').classList.remove('hidden');
-    chargerInterfaceUtilisateur(user);
+
+    try {
+      const response = await fetch('connexion.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        alert('Connexion réussie ! Bienvenue, ' + result.user.role + '.');
+        document.getElementById('loginContainer').classList.add('hidden');
+        document.getElementById('sidebar').classList.remove('hidden');
+        chargerInterfaceUtilisateur(result.user);
+      } else {
+        alert(result.error);
+      }
+    } catch (error) {
+      console.error('Erreur lors de la connexion :', error);
+      alert('Une erreur est survenue. Veuillez réessayer.');
+    }
   }
 
-  // Inscription avec rôle
-  function inscription() {
+  // Inscription
+  async function inscription() {
     const email = document.getElementById('registerEmail').value;
     const password = document.getElementById('registerPassword').value;
     const role = document.getElementById('registerRole').value;
-    const user = { email, password, role, accepte: false }; // Rôle choisi
-    utilisateurs.push(user);
-    localStorage.setItem('utilisateurs', JSON.stringify(utilisateurs));
-    alert("Inscription réussie. Veuillez attendre l'activation de votre compte par un administrateur.");
-    showLogin();
+
+    try {
+      const response = await fetch('inscription.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, role })
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        alert(result.message);
+        showLogin();
+      } else {
+        alert(result.error);
+      }
+    } catch (error) {
+      console.error('Erreur lors de l\'inscription :', error);
+      alert('Une erreur est survenue. Veuillez réessayer.');
+    }
   }
 
   // Afficher le formulaire de connexion

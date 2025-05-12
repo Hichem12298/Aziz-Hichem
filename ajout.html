@@ -117,7 +117,7 @@
   typeSelect.addEventListener('change', async () => {
     fieldsContainer.innerHTML = '';
     const fields = fieldTemplates[typeSelect.value] || [];
-  
+
     for (const field of fields) {
       if (typeSelect.value === 'canton' && field === 'id_foret') {
         // Si le type est "Canton" et le champ est "id_foret", charger les forêts
@@ -126,11 +126,11 @@
         const select = document.createElement('select');
         select.name = 'id_foret';
         select.required = true;
-  
+
         try {
           const response = await fetch('fetch_forets.php');
           const forets = await response.json();
-  
+
           forets.forEach(foret => {
             const option = document.createElement('option');
             option.value = foret.id;
@@ -140,7 +140,7 @@
         } catch (error) {
           console.error('Erreur lors de la récupération des forêts:', error);
         }
-  
+
         fieldsContainer.appendChild(label);
         fieldsContainer.appendChild(select);
       } else {
@@ -153,7 +153,7 @@
       }
     }
   });
-  
+
   // Ajouter une nouvelle entité dans la base de données
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -161,14 +161,14 @@
     const inputs = fieldsContainer.querySelectorAll('input, select');
     const data = {};
     inputs.forEach(input => data[input.name] = input.value);
-  
+
     try {
       const response = await fetch('insert.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type, data })
       });
-  
+
       const result = await response.json();
       if (result.message) {
         console.log(result.message);
@@ -182,7 +182,7 @@
       console.error('Erreur lors de l\'ajout de l\'entité:', error);
     }
   });
-  
+
   // Charger les données au chargement de la page
   fetchEntites();
   </script>

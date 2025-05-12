@@ -1,8 +1,8 @@
 <?php
 $host = 'localhost';
-$dbname = 'votre_base_de_donnees';
-$username = 'votre_utilisateur';
-$password = 'votre_mot_de_passe';
+$dbname = 'gestion_entites'; // Updated database name
+$username = 'root'; // Default username for XAMPP
+$password = ''; // Default password for XAMPP
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);

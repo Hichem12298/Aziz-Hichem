@@ -91,67 +91,97 @@
     <table class="user-table">
       <thead>
         <tr>
+          <th>ID</th>
           <th>Email</th>
           <th>Rôle</th>
-          <th>Statut</th>
-          <th>Actions</th>
+          <th>Validé</th>
+          <th>Action</th>
         </tr>
       </thead>
-      <tbody id="userList">
-        <!-- La liste des utilisateurs sera générée ici -->
+      <tbody id="userTableBody">
+        <!-- Les utilisateurs seront chargés ici -->
       </tbody>
     </table>
   </div>
 
   <script>
-    // Récupérer les utilisateurs du localStorage
-    let utilisateurs = JSON.parse(localStorage.getItem('utilisateurs')) || [
-      { email: "administrateur@gmail.com", password: "123", role: "admin", accepte: true }
-    ];
+    async function fetchUsers() {
+      try {
+        const response = await fetch('fetch_users.php');
+        const users = await response.json();
 
-    // Fonction pour afficher la liste des utilisateurs
-    function afficherUtilisateurs() {
-      const userList = document.getElementById('userList');
-      userList.innerHTML = '';
-      utilisateurs.forEach((user, index) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${user.email}</td>
-          <td>${user.role}</td>
-          <td>${user.accepte ? 'Accepté' : 'En attente'}</td>
-          <td>
-            <button onclick="supprimerUtilisateur(${index})">Supprimer</button>
-            ${user.accepte ? '' : `<button onclick="accepterUtilisateur(${index})">Accepter</button>`}
-          </td>
-        `;
-        userList.appendChild(tr);
-      });
-    }
+        const tableBody = document.getElementById('userTableBody');
+        tableBody.innerHTML = '';
 
-    // Fonction pour supprimer un utilisateur
-    function supprimerUtilisateur(index) {
-      if (confirm("Êtes-vous sûr de vouloir supprimer cet utilisateur ?")) {
-        utilisateurs.splice(index, 1);
-        localStorage.setItem('utilisateurs', JSON.stringify(utilisateurs));
-        afficherUtilisateurs(); // Mettre à jour la liste
+        users.forEach(user => {
+          const row = document.createElement('tr');
+
+          row.innerHTML = `
+            <td>${user.id}</td>
+            <td>${user.email}</td>
+            <td>${user.role}</td>
+            <td>${user.accepte == 1 ? 'Oui' : 'Non'}</td>
+            <td>
+              ${user.accepte == 0 ? `<button onclick="validateUser(${user.id})">Valider</button>` : ''}
+              <button onclick="deleteUser(${user.id})">Supprimer</button>
+            </td>
+          `;
+
+          tableBody.appendChild(row);
+        });
+      } catch (error) {
+        console.error('Erreur lors de la récupération des utilisateurs :', error);
       }
     }
 
-    // Fonction pour accepter un utilisateur
-    function accepterUtilisateur(index) {
-      utilisateurs[index].accepte = true;
-      localStorage.setItem('utilisateurs', JSON.stringify(utilisateurs));
-      afficherUtilisateurs(); // Mettre à jour la liste
+    async function validateUser(userId) {
+      try {
+        const response = await fetch('validate_user.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: userId })
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          alert('Utilisateur validé avec succès.');
+          fetchUsers();
+        } else {
+          alert(result.error);
+        }
+      } catch (error) {
+        console.error('Erreur lors de la validation de l\'utilisateur :', error);
+      }
+    }
+
+    async function deleteUser(userId) {
+      try {
+        const response = await fetch('delete_user.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: userId })
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          alert('Utilisateur supprimé avec succès.');
+          fetchUsers();
+        } else {
+          alert(result.error);
+        }
+      } catch (error) {
+        console.error('Erreur lors de la suppression de l\'utilisateur :', error);
+      }
     }
 
     // Fonction de déconnexion
     function logout() {
       localStorage.removeItem('currentUser');
-      location.href = 'index.html'; // Redirige vers la page d'accueil
+      location.href = 'website.html'; // Redirige vers la page d'accueil
     }
 
-    // Appeler la fonction pour afficher les utilisateurs au chargement de la page
-    afficherUtilisateurs();
+    // Charger les utilisateurs au chargement de la page
+    fetchUsers();
   </script>
 
 </body>

@@ -2,138 +2,85 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Entrer les Données Dendrométriques</title>
+    <title>Ajout Donnée Dendrométrique</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #ecf0f1;
-            color: #2c3e50;
-            margin: 0;
-            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e0f7fa, #80deea);
+            padding: 50px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            height: 100vh;
         }
 
-        h1 {
-            margin-top: 20px;
-            font-size: 36px;
-            color: #2c3e50;
+        h2 {
+            color: #004d40;
+            margin-bottom: 20px;
         }
 
         form {
-            background-color: #fff;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            border-radius: 8px;
-            width: 400px;
-            margin-top: 30px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
-
-        input, textarea {
             width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
+            max-width: 400px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            margin: 10px 0;
             border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
+            border-radius: 8px;
+            transition: border 0.3s;
+        }
+
+        input:focus {
+            border-color: #26a69a;
+            outline: none;
         }
 
         button {
-            background-color: #2c3e50;
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
             width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            background-color: #00796b;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
 
         button:hover {
-            background-color: #34495e;
+            background-color: #004d40;
         }
 
-        .back-btn {
-            margin-top: 30px;
-            padding: 12px 20px;
-            background-color: #2c3e50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background 0.3s;
+        .secondary-btn {
+            background-color: #546e7a;
+            margin-top: 20px;
         }
 
-        .back-btn:hover {
-            background-color: #34495e;
+        .secondary-btn:hover {
+            background-color: #37474f;
         }
     </style>
 </head>
 <body>
 
-    <h1>Entrer les Données Dendrométriques</h1>
+    <h2>Ajouter une donnée dendrométrique</h2>
 
-    <form id="dendroForm">
-        <label for="species">Espèce de l'arbre</label>
-        <input type="text" id="species" name="species" required placeholder="Entrez l'espèce de l'arbre">
-
-        <label for="diameter">Diamètre (en cm)</label>
-        <input type="number" id="diameter" name="diameter" required placeholder="Entrez le diamètre de l'arbre en cm" min="0">
-
-        <label for="height">Hauteur (en m)</label>
-        <input type="number" id="height" name="height" required placeholder="Entrez la hauteur de l'arbre en m" min="0">
-
-        <label for="location">Localisation (Pays ou Région)</label>
-        <input type="text" id="location" name="location" required placeholder="Entrez la localisation de l'espèce">
-
-        <button type="submit">Enregistrer les données</button>
+    <form action="insert.php" method="POST">
+        <input type="text" name="espece" placeholder="Espèce de l'arbre" required>
+        <input type="number" step="0.01" name="diametre" placeholder="Diamètre (cm)" required>
+        <input type="number" step="0.01" name="hauteur" placeholder="Hauteur (m)" required>
+        <input type="text" name="localisation" placeholder="Localisation" required>
+        <button type="submit">Enregistrer</button>
     </form>
 
-    <button class="back-btn" onclick="window.location.href = 'voir_donnees.html';">Voir les données enregistrées</button>
-
-    <script>
-        document.getElementById('dendroForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            // Récupérer les données du formulaire
-            const species = document.getElementById('species').value;
-            const diameter = document.getElementById('diameter').value;
-            const height = document.getElementById('height').value;
-            const location = document.getElementById('location').value;
-
-            // Créer un objet avec les données de l'arbre, y compris la localisation
-            const treeData = {
-                species: species,
-                diameter: diameter,
-                height: height,
-                location: location // Nouvelle information
-            };
-
-            // Récupérer les données existantes dans le localStorage ou initialiser un tableau vide
-            let trees = JSON.parse(localStorage.getItem('trees')) || [];
-
-            // Ajouter les nouvelles données au tableau
-            trees.push(treeData);
-
-            // Sauvegarder à nouveau dans le localStorage
-            localStorage.setItem('trees', JSON.stringify(trees));
-
-            // Réinitialiser le formulaire
-            document.getElementById('dendroForm').reset();
-            alert('Données sauvegardées avec succès!');
-        });
-    </script>
+    <button class="secondary-btn" onclick="window.location.href='voir_donnees.php'">Voir les données</button>
 
 </body>
 </html>
