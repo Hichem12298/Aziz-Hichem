@@ -2,7 +2,7 @@
 $host = "localhost";
 $user = "root";
 $password = "";
-$dbname = "arbres";
+$dbname = "gestion_entites";
 
 $conn = new mysqli($host, $user, $password, $dbname);
 
@@ -10,8 +10,8 @@ if ($conn->connect_error) {
     die("Erreur de connexion : " . $conn->connect_error);
 }
 
-if (isset($_GET['id'])) {
-    $id = intval($_GET['id']);
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
+    $id = intval($_POST['id']);
     $sql = "DELETE FROM donnees_dendrometriques WHERE id = $id";
 
     if ($conn->query($sql) === TRUE) {
@@ -20,7 +20,7 @@ if (isset($_GET['id'])) {
         echo "Erreur lors de la suppression.";
     }
 } else {
-    echo "ID manquant.";
+    echo "ID manquant ou méthode non autorisée.";
 }
 
 $conn->close();

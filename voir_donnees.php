@@ -1,5 +1,5 @@
 <?php
-$pdo = new PDO("mysql:host=localhost;dbname=arbres;charset=utf8", "root", "");
+$pdo = new PDO("mysql:host=localhost;dbname=gestion_entites;charset=utf8", "root", "");
 $donnees = $pdo->query("SELECT * FROM donnees_dendrometriques")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
@@ -38,7 +38,7 @@ $donnees = $pdo->query("SELECT * FROM donnees_dendrometriques")->fetchAll(PDO::F
             <td><?= htmlspecialchars($d['hauteur']) ?></td>
             <td><?= htmlspecialchars($d['localisation']) ?></td>
             <td>
-                <form action="supprimer.php" method="POST" onsubmit="return confirm('Supprimer ?');">
+                <form action="supprimer_donnee.php" method="POST" onsubmit="return confirm('Supprimer ?');">
                     <input type="hidden" name="id" value="<?= $d['id'] ?>">
                     <button type="submit" class="btn-delete">Supprimer</button>
                 </form>
@@ -46,6 +46,35 @@ $donnees = $pdo->query("SELECT * FROM donnees_dendrometriques")->fetchAll(PDO::F
         </tr>
     <?php endforeach; ?>
 </table>
+
+<script>
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', async function (e) {
+                e.preventDefault(); // Empêcher le rechargement de la page
+
+                const formData = new FormData(this);
+                const id = formData.get('id');
+
+                try {
+                    const response = await fetch('supprimer_donnee.php', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.text();
+                    if (result.includes('succès')) {
+                        alert('Donnée supprimée avec succès !');
+                        this.closest('tr').remove(); // Supprimer la ligne du tableau
+                    } else {
+                        alert('Erreur : ' + result);
+                    }
+                } catch (error) {
+                    console.error('Erreur lors de la suppression :', error);
+                    alert('Une erreur est survenue. Veuillez réessayer.');
+                }
+            });
+        });
+    </script>
 
 </body>
 </html>
