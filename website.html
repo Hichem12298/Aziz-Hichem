@@ -227,23 +227,22 @@
     try {
       const response = await fetch('connexion.php', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ email, password })
       });
 
       const result = await response.json();
-      if (result.success) {
-        alert('Connexion réussie ! Bienvenue, ' + result.user.role + '.');
-        localStorage.setItem('currentUser', JSON.stringify(result.user));
+      if (result.status === 'success') {
+        // Mettre à jour l'interface utilisateur en fonction du rôle
+        chargerInterfaceUtilisateur(result.user);
         document.getElementById('loginContainer').classList.add('hidden');
         document.getElementById('sidebar').classList.remove('hidden');
-        chargerInterfaceUtilisateur(result.user);
       } else {
-        alert(result.error);
+        alert(result.message || 'Erreur de connexion.');
       }
     } catch (error) {
       console.error('Erreur lors de la connexion :', error);
-      alert('Une erreur est survenue. Veuillez réessayer.');
+      alert('Une erreur est survenue.');
     }
   }
 

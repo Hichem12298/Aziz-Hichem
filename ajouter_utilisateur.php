@@ -30,9 +30,9 @@ try {
 
         // Insertion de l'utilisateur dans la base de données
         $sql = "INSERT INTO utilisateurs (nom, prenom, email, password, role, accepte) 
-                VALUES (?, ?, ?, ?, ?, ?)";
+                VALUES (?, ?, ?, ?, ?, 1)";
         $stmt = $pdo->prepare($sql);
-        $stmt->execute([$nom, $prenom, $email, $hashed_password, $role, 0]);
+        $stmt->execute([$nom, $prenom, $email, $hashed_password, $role]);
 
         // Return a JSON response indicating success
         echo json_encode(["success" => true, "message" => "Utilisateur ajouté avec succès !"]);

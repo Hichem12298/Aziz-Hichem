@@ -2,7 +2,7 @@
 header('Content-Type: application/json');
 
 // Inclure le fichier de configuration pour la connexion à la base de données
-require 'config.php';
+require 'db.php';
 
 // Récupérer les données envoyées en JSON
 $data = json_decode(file_get_contents('php://input'), true);
@@ -14,16 +14,17 @@ if (!empty($data['email']) && !empty($data['password']) && !empty($data['role'])
     $role = $data['role'];
 
     try {
-        // Préparer la requête pour insérer un nouvel utilisateur
-        $stmt = $pdo->prepare("INSERT INTO utilisateurs (email, password, role, accepte) VALUES (:email, :password, :role, FALSE)");
+        // Préparer la requête pour insérer un nouvel utilisateur avec 'accepte' par défaut à FALSE
+        $stmt = $pdo->prepare("INSERT INTO utilisateurs (email, password, role, accepte) VALUES (:email, :password, :role, :accepte)");
         $stmt->execute([
             ':email' => $email,
             ':password' => $password,
-            ':role' => $role
+            ':role' => $role,
+            ':accepte' => false // Par défaut, l'utilisateur n'est pas accepté
         ]);
 
         // Réponse en cas de succès
-        echo json_encode(['success' => true, 'message' => 'Inscription réussie. Veuillez attendre l\'activation de votre compte par un administrateur.']);
+        echo json_encode(['success' => true, 'message' => 'Inscription réussie. Veuillez attendre l\'activation de votre compte.']);
     } catch (PDOException $e) {
         // Gérer les erreurs, comme un email déjà utilisé
         if ($e->getCode() == 23000) { // Violation de contrainte UNIQUE

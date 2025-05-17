@@ -1,7 +1,7 @@
 <?php
 header("Content-Type: application/json");
 
-require 'config.php';
+require 'db.php';
 
 try {
     $stmt = $pdo->query("SELECT id, nom FROM foret");

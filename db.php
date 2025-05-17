@@ -1,7 +1,7 @@
 <?php
 // Connexion à la base de données MySQL
 $host = 'localhost';      // L'hôte de la base de données
-$dbname = 'base_de_donnees';  // Le nom de la base de données
+$dbname = 'gestion_entites';  // Le nom de la base de données
 $username = 'root';       // Nom d'utilisateur de MySQL (modifiez selon votre configuration)
 $password = '';           // Mot de passe de MySQL (modifiez selon votre configuration)
 

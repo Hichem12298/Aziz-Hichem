@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json');
-require 'config.php';
+require 'db.php';
 
 try {
     // Récupérer tous les utilisateurs, qu'ils soient validés ou non

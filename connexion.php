@@ -1,6 +1,5 @@
 <?php
 session_start();
-header('Content-Type: application/json');
 
 // Connexion à la base de données
 $dsn = "mysql:host=localhost;dbname=gestion_entites;charset=utf8";
@@ -10,9 +9,9 @@ $pass = "";  // Mot de passe MySQL (souvent vide sur XAMPP)
 try {
     $pdo = new PDO($dsn, $user, $pass, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
 
-    // Vérifier si l'admin existe, sinon l'ajouter
+    // Vérifier si l'utilisateur administrateur existe, sinon l'ajouter automatiquement
     $adminEmail = "administrateur@gmail.com";
-    $adminPassword = "123";
+    $adminPassword = "123"; // Mot de passe par défaut
 
     $stmt = $pdo->prepare("SELECT * FROM utilisateurs WHERE email = ?");
     $stmt->execute([$adminEmail]);
@@ -22,43 +21,41 @@ try {
         $hashedPassword = password_hash($adminPassword, PASSWORD_DEFAULT);
         $stmt = $pdo->prepare("INSERT INTO utilisateurs (email, password, role, accepte) VALUES (?, ?, ?, ?)");
         $stmt->execute([$adminEmail, $hashedPassword, 'admin', true]);
-        echo json_encode(["status" => "success", "message" => "Administrateur ajouté avec succès !"]);
+        error_log("Administrateur ajouté automatiquement.");
     }
 
-} catch (PDOException $e) {
-    die("Erreur de connexion à la base de données : " . $e->getMessage());
-}
+    // Vérification des identifiants de connexion
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $email = trim($_POST["email"]);
+        $password = trim($_POST["password"]);
 
-// Vérification des identifiants de connexion
-$data = json_decode(file_get_contents('php://input'), true);
+        if (empty($email) || empty($password)) {
+            echo json_encode(["status" => "error", "message" => "Veuillez remplir tous les champs."]);
+            exit;
+        }
 
-if (!empty($data['email']) && !empty($data['password'])) {
-    $email = $data['email'];
-    $password = $data['password'];
-
-    try {
-        $stmt = $pdo->prepare("SELECT * FROM utilisateurs WHERE email = :email");
-        $stmt->execute([':email' => $email]);
+        $stmt = $pdo->prepare("SELECT * FROM utilisateurs WHERE email = ?");
+        $stmt->execute([$email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user && password_verify($password, $user['password'])) {
-            if ($user['accepte']) {
-                $_SESSION["user"] = [
-                    "id" => $user["id"],
-                    "email" => $user["email"],
-                    "role" => $user["role"]
-                ];
-                echo json_encode(['success' => true, 'user' => ['email' => $user['email'], 'role' => $user['role']]]);
-            } else {
-                echo json_encode(['success' => false, 'error' => 'Votre compte n\'a pas encore été validé par un administrateur.']);
-            }
+            $_SESSION['user'] = [
+                "id" => $user['id'],
+                "email" => $user['email'],
+                "role" => $user['role']
+            ];
+
+            // Retourner uniquement les informations de l'utilisateur pour l'interface
+            echo json_encode([
+                "status" => "success",
+                "message" => "Connexion réussie !",
+                "user" => $_SESSION['user']
+            ]);
         } else {
-            echo json_encode(['success' => false, 'error' => 'Email ou mot de passe incorrect.']);
+            echo json_encode(["status" => "error", "message" => "Identifiants incorrects."]);
         }
-    } catch (PDOException $e) {
-        echo json_encode(['success' => false, 'error' => 'Erreur : ' . $e->getMessage()]);
     }
-} else {
-    echo json_encode(['success' => false, 'error' => 'Tous les champs sont obligatoires.']);
+} catch (PDOException $e) {
+    die("Erreur de connexion à la base de données : " . $e->getMessage());
 }
 ?>

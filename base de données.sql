@@ -82,17 +82,24 @@ CREATE TABLE IF NOT EXISTS donnee (
     location VARCHAR(255) NOT NULL
 );
 
--- Table pour les utilisateurs
+-- Table pour les Utilisateurs
 CREATE TABLE IF NOT EXISTS utilisateurs (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    email VARCHAR(255) NOT NULL UNIQUE,
+    email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     role VARCHAR(50) NOT NULL,
     accepte BOOLEAN DEFAULT FALSE
 );
 
--- Insert sample data into the 'donnee' table
-INSERT INTO donnee (species, diameter, height, location) VALUES
-('Chêne', 30.5, 15.2, 'France'),
-('Pin', 25.0, 20.0, 'Canada'),
-('Érable', 20.0, 10.5, 'États-Unis');
+CREATE TABLE IF NOT EXISTS donnees_dendrometriques (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    espece VARCHAR(100) NOT NULL,
+    diametre FLOAT NOT NULL,
+    hauteur FLOAT NOT NULL,
+    localisation VARCHAR(100) NOT NULL
+);
+
+-- Ajouter une colonne 'accepte' à la table 'utilisateurs' si elle n'existe pas déjà
+ALTER TABLE utilisateurs ADD COLUMN IF NOT EXISTS accepte BOOLEAN DEFAULT FALSE;
+
+
