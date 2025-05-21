@@ -103,6 +103,7 @@
       <option value="agent">Agent de récolte</option>
       <option value="analyste">Analyste</option>
       <option value="conservation">Agent de conservation</option>
+      <option value="surveillance">Surveillance</option>
       <option value="public">Public</option>
     </select>
 
@@ -138,9 +139,13 @@
           break;
         case 'administrateur':
           container.innerHTML = `
-            <button onclick="location.href='admin.html'">Gérer les utilisateurs</button>
-            
-        
+            <button onclick="location.href='admin_utilisateurs.html'">Gérer les utilisateurs</button>
+            <button onclick="location.href='contact.html'">Contact</button>
+          `;
+          break;
+        case 'surveillance':
+          container.innerHTML = `
+            <button onclick="location.href='surveillance.html'">Surveillance</button>
             <button onclick="location.href='contact.html'">Contact</button>
           `;
           break;
